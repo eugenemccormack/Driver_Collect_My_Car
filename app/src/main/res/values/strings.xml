@@ -1,0 +1,30 @@
+<resources>
+    <string name="app_name">Driver App</string>
+    <string name="title_activity_maps">Map</string>
+    <string name="login">Login</string>
+    <string name="Register">Register</string>
+
+    <string name="open">Open</string>
+    <string name="closed">Closed</string>
+    <string name="nav_header_desc">nav header desc</string>
+    <string name="nav_header_title">Driver Name</string>
+    <string name="nav_header_subtitle">Driver Phone</string>
+    <string name="msg_token_fmt">Token Message</string>
+    <string name="decline">Decline</string>
+    <string name="permission_required">Permission Required</string>
+    <string name="decline_failed">Decline Failed</string>
+    <string name="decline_successful">Collection has been Declined</string>
+    <string name="token_not_found">Token Not Found</string>
+    <string name="start_journey">Start Journey</string>
+    <string name="user_not_found">User Not Found with Key</string>
+    <string name="accept_failed">Accept Failed</string>
+    <string name="driver_arrived">Driver has Arrived</string>
+    <string name="your_driver_arrived">Your Driver has Arrived</string>
+    <string name="times_up">Time is Up!</string>
+    <string name="collection_camera">Collection Pictures</string>
+    <string name="dropOff_camera">Drop Off Pictures</string>
+    <string name="complete_journey">Complete Journey</string>
+    <string name="complete_journey_failed">Complete Journey Failed</string>
+    <string name="complete_journey_successful">Your Car have been Successfully Dropped Off, Thank You!</string>
+
+</resources>

@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+
+    tools:context=".CameraActivity">
+
+
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="match_parent"
+        android:layout_height="416dp"
+        android:layout_marginTop="16dp"
+        android:background="@drawable/register_edittext"
+        android:src="@mipmap/ic_launcher" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+
+        <!--        <Button
+                    android:id="@+id/savePicture"
+                    android:visibility="visible"
+                    android:layout_width="130dp"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginEnd="50dp"
+                    android:layout_toRightOf="@+id/btnTakePicture"
+                    android:background="@drawable/button_border"
+                    android:text="Save Picture"
+                    android:textColor="@color/white"
+                    app:layout_constraintBottom_toBottomOf="@+id/btnTakePicture"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/btnTakePicture"
+                    app:layout_constraintVertical_bias="0.0" />-->
+
+<!--        <com.kusu.library.LoadingButton
+
+            android:id="@+id/complete_Pictures"
+            android:layout_width="130dp"
+            android:layout_height="wrap_content"
+            android:enabled="true"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:text="@string/dropOff_camera"
+            android:visibility="visible"
+            app:lb_shadowColor="@color/dark_Blue"
+            android:textColor="@color/dark_Blue"
+            app:lb_cornerRadius="4dp"
+            app:lb_shadowHeight="2dp"
+
+            android:background="@drawable/button_border"
+
+            app:lb_isCircular="false"
+            tools:ignore="MissingConstraints"
+            tools:layout_editor_absoluteX="58dp"
+            tools:layout_editor_absoluteY="6dp" />-->
+
+        <com.kusu.library.LoadingButton
+            android:id="@+id/btnTakePicture"
+            android:layout_width="130dp"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="48dp"
+            android:background="@color/light_Blue"
+            android:shadowColor="@color/dark_Blue"
+            android:shadowRadius="6.0"
+            android:text="Take Picture"
+            android:textColor="@color/white"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.495"
+            app:lb_cornerRadius="4dp"
+            app:lb_shadowColor="@color/dark_Blue"
+            app:lb_shadowHeight="3dp" />
+
+        <com.kusu.library.LoadingButton
+            android:id="@+id/finish_Picture"
+            android:layout_width="130dp"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="55dp"
+            android:layout_marginEnd="44dp"
+            android:layout_toRightOf="@+id/btnTakePicture"
+            android:enabled="false"
+            android:shadowColor="@color/dark_Blue"
+            android:shadowRadius="6.0"
+            android:text="Finished"
+            android:textColor="@color/white"
+            app:layout_constraintBottom_toBottomOf="@+id/btnTakePicture"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/btnTakePicture"
+            app:layout_constraintTop_toTopOf="@+id/btnTakePicture"
+            app:layout_constraintVertical_bias="0.0"
+            app:lb_cornerRadius="4dp"
+            app:lb_shadowColor="@color/dark_Blue"
+            app:lb_shadowHeight="3dp" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</LinearLayout>
