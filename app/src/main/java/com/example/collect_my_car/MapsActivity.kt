@@ -14,10 +14,7 @@ import android.location.Address
 import android.location.Geocoder
 import android.location.Location
 import android.location.LocationManager
-import android.os.Bundle
-import android.os.CountDownTimer
-import android.os.Looper
-import android.os.Vibrator
+import android.os.*
 import android.text.TextUtils
 import android.util.Log
 import android.view.MenuItem
@@ -76,6 +73,7 @@ import java.io.IOException
 import java.util.*
 import java.util.concurrent.TimeUnit
 import kotlin.collections.HashMap
+import kotlin.math.absoluteValue
 
 class MapsActivity : AppCompatActivity(), OnMapReadyCallback, SensorEventListener { //AppCompatActivity(), OnMapReadyCallback, LocationListener, SensorEventListener {
 
@@ -144,6 +142,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, SensorEventListene
     private lateinit var complete_journey_button: LoadingButton
     private lateinit var take_Pictures: LoadingButton
     private lateinit var complete_Pictures: LoadingButton
+    private lateinit var hard_braking: LoadingButton
 
     private lateinit var  layout_notify_user: LinearLayout
     private lateinit var txt_notify_user: TextView
@@ -358,11 +357,11 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, SensorEventListene
                 .findFragmentById(R.id.map) as SupportMapFragment
         mapFragment.getMapAsync(this)*/
 
-        sensorManager=getSystemService(Context.SENSOR_SERVICE) as SensorManager
-        /*sensor=sensorManager!!.getDefaultSensor(Sensor.TYPE_ACCELEROMETER)*/
+/*        sensorManager=getSystemService(Context.SENSOR_SERVICE) as SensorManager
+        *//*sensor=sensorManager!!.getDefaultSensor(Sensor.TYPE_ACCELEROMETER)*//*
         sensorManager!!.registerListener(this,
                 sensorManager!!.getDefaultSensor(Sensor.TYPE_ACCELEROMETER),
-                SensorManager.SENSOR_DELAY_NORMAL)
+                SensorManager.SENSOR_DELAY_NORMAL)*/
 
         toggle = ActionBarDrawerToggle(this, drawerLayoutMaps, R.string.open, R.string.closed)
 
@@ -500,6 +499,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, SensorEventListene
         complete_journey_button = findViewById(R.id.complete_journey_button) as LoadingButton
         take_Pictures = findViewById(R.id.take_Pictures) as LoadingButton
         complete_Pictures = findViewById(R.id.complete_Pictures) as LoadingButton
+        hard_braking = findViewById(R.id.hard_braking) as LoadingButton
 
 
         layout_notify_user = findViewById(R.id.layout_notify_user) as LinearLayout
@@ -651,6 +651,8 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, SensorEventListene
 
             }
 
+            startAccelerometer()
+
             start_journey_button.visibility = View.GONE
             chip_decline.visibility = View.GONE
            //Before Complete Photos Added// complete_journey_button.visibility = View.VISIBLE
@@ -663,6 +665,9 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, SensorEventListene
         }
 
         complete_Pictures.setOnClickListener {
+
+
+            sensorManager!!.unregisterListener(this)
 
             val cameraMode = "dropOffPhotos"
 
@@ -740,6 +745,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, SensorEventListene
 
 
                                     driverRequestReceived = null
+
                                     makeDriverOnline(location)
 
 
@@ -1282,6 +1288,20 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, SensorEventListene
             }
         }
     }*/
+
+    private fun startAccelerometer(){
+
+        sensorManager=getSystemService(Context.SENSOR_SERVICE) as SensorManager
+        /*sensor=sensorManager!!.getDefaultSensor(Sensor.TYPE_ACCELEROMETER)*/
+        sensorManager!!.registerListener(this,
+                sensorManager!!.getDefaultSensor(Sensor.TYPE_ACCELEROMETER),
+                SensorManager.SENSOR_DELAY_NORMAL)
+
+
+
+    }
+
+
     override fun onAccuracyChanged(sensor: Sensor?, accuracy: Int) {
 
     }
@@ -1312,18 +1332,44 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, SensorEventListene
 
             }
 
-            else if (x > 150.0){//10.0){
+            else if (y > 14.0){//10.0){ //previously x
 
                 var v=getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
                 //v.vibrate(500)
-               // Toast.makeText(this, "Braking Hard -" + x.absoluteValue , Toast.LENGTH_LONG).show()
+                //Toast.makeText(this, "Braking Hard -" + x.absoluteValue , Toast.LENGTH_LONG).show()
 
-                val uid = FirebaseAuth.getInstance().uid ?: ""
-                val ref = FirebaseDatabase.getInstance().getReference("/UserInfo/mapSensor/$uid").push()
+                val braking = save(y) //x
 
-                val user = save(x)
+             FirebaseDatabase.getInstance()
+                    .getReference(Common.TRIP)
+                    .child(tripNumberId!!).child("Braking")
+                     .push().setValue(braking)
+                    .addOnFailureListener { e ->  Toast.makeText(this@MapsActivity, e.message, Toast.LENGTH_SHORT).show()
+                    }.addOnSuccessListener {
 
-                ref.setValue(user)
+                         complete_Pictures.visibility = View.GONE
+
+                         hard_braking.visibility = View.VISIBLE
+
+
+         /*                 Handler(Looper.getMainLooper()).postDelayed({
+
+                              }, 3000)*/
+
+                         hard_braking.visibility = View.GONE
+                         complete_Pictures.visibility = View.VISIBLE
+
+                         Toast.makeText(this, "Hard Braking Detected - " + y.absoluteValue , Toast.LENGTH_LONG).show()
+
+                    }
+
+/*                val uid = FirebaseAuth.getInstance().uid ?: ""
+                val ref = FirebaseDatabase.getInstance().getReference("/DriverInfo/mapSensor/$uid").push()
+                //val ref = FirebaseDatabase.getInstance().getReference("/UserInfo/mapSensor/$uid").push()
+
+                val braking = save(x)
+
+                ref.setValue(braking)*/
 
             }
 
@@ -1651,6 +1697,12 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, SensorEventListene
 
 
                                                 }
+
+                                            FirebaseDatabase.getInstance().getReference(Common.USER_INFO)
+                                                    .child(event!!.key!!)
+                                                    .child("Collections")
+                                                    .child(tripNumberId!!)
+                                                    .setValue(tripPlanModel)
 
                                         }
 
