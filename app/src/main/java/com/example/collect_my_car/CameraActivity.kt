@@ -208,15 +208,17 @@ class CameraActivity : AppCompatActivity() {
 
                         if (cameraMode != null) {
 
-/*                            val update_photos = HashMap<String, Any>()
+                           /* val update_photos = HashMap<String, Any>()
 
                             update_photos.put(cameraMode, photos)
                             FirebaseDatabase.getInstance()
                                     .getReference(Common.TRIP)
                                     .child(tripNumberId!!)
                                     .child(cameraMode)
-                                    .push()
+                                    .child("photos")
                                     .updateChildren(update_photos)*/
+
+                            //.child(cameraMode)
 
                             tripInfoRef.child(tripNumberId!!).child(cameraMode).push().setValue(photos)
 

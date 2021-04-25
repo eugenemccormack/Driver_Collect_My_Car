@@ -700,7 +700,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, SensorEventListene
 
             val update_trip = HashMap<String, Any>()
 
-            update_trip.put("isdone", true)
+            update_trip.put("done", true)
             FirebaseDatabase.getInstance()
                     .getReference(Common.TRIP)
                     .child(tripNumberId!!)
@@ -1342,11 +1342,11 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, SensorEventListene
                 //v.vibrate(500)
                 //Toast.makeText(this, "Braking Hard -" + x.absoluteValue , Toast.LENGTH_LONG).show()
 
-                val braking = save(y) //x
+                val braking = Save(y) //x
 
              FirebaseDatabase.getInstance()
                     .getReference(Common.TRIP)
-                    .child(tripNumberId!!).child("Braking")
+                    .child(tripNumberId!!).child("braking")
                      .push().setValue(braking)
                     .addOnFailureListener { e ->  Toast.makeText(this@MapsActivity, e.message, Toast.LENGTH_SHORT).show()
                     }.addOnSuccessListener {
@@ -1410,7 +1410,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, SensorEventListene
     private class locationchanged(val latitude: Double, val longitude: Double) {
 
     }*/
-    private class save(val sensor: Float) {
+    private class Save(val sensor: Float) {
 
     }
 
@@ -1672,6 +1672,8 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, SensorEventListene
 
                                             val tripPlanModel = TripPlanModel()
 
+                                            //val collectionPhotos = CollectionPhotos()
+
                                             tripPlanModel.driver = FirebaseAuth.getInstance().currentUser!!.uid
                                             tripPlanModel.user = event!!.key
                                             tripPlanModel.driverInfoModel = Common.currentUser
@@ -1685,6 +1687,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, SensorEventListene
                                             tripPlanModel.currentLat = location.latitude
                                             tripPlanModel.currentLng = location.longitude
                                             tripPlanModel.time = formatted
+                                            //tripPlanModel.collectionPhotos = collectionPhotos
                                             /*tripPlanModel.collectionPhotos = null
                                             tripPlanModel.dropOffPhotos = null*/
 
