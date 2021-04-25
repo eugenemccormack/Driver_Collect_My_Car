@@ -26,5 +26,6 @@
     <string name="complete_journey">Complete Journey</string>
     <string name="complete_journey_failed">Complete Journey Failed</string>
     <string name="complete_journey_successful">Your Car have been Successfully Dropped Off, Thank You!</string>
+    <string name="hard_braking">Hard Braking</string>
 
 </resources>

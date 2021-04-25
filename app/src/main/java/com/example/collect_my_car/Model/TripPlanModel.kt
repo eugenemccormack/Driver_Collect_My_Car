@@ -34,4 +34,12 @@ class TripPlanModel {
 
     var isCancelled = false
 
+    var time: String? = null
+
+    var collectionPhotos: String? = null
+
+    var dropOffPhotos: String? = null
+
+    var collectionNumber: String? = null
+
 }

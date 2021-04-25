@@ -21,6 +21,7 @@ import android.view.MenuItem
 import android.view.View
 import android.view.animation.LinearInterpolator
 import android.widget.*
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
@@ -70,6 +71,9 @@ import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import org.json.JSONObject
 import java.io.IOException
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
+import java.time.format.FormatStyle
 import java.util.*
 import java.util.concurrent.TimeUnit
 import kotlin.collections.HashMap
@@ -696,7 +700,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, SensorEventListene
 
             val update_trip = HashMap<String, Any>()
 
-            update_trip.put("done", true)
+            update_trip.put("isdone", true)
             FirebaseDatabase.getInstance()
                     .getReference(Common.TRIP)
                     .child(tripNumberId!!)
@@ -813,7 +817,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, SensorEventListene
                                     }
 
                                     polylineOptions = PolylineOptions()
-                                    polylineOptions!!.color(R.color.light_Blue)
+                                    polylineOptions!!.color(R.color.blue)
                                     polylineOptions!!.width(12f)
                                     polylineOptions!!.startCap(SquareCap())
                                     polylineOptions!!.jointType(JointType.ROUND)
@@ -821,7 +825,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, SensorEventListene
                                     greyPolyline = mMap.addPolyline(polylineOptions)
 
                                     blackPolylineOptions = PolylineOptions()
-                                    blackPolylineOptions!!.color(R.color.dark_Blue)
+                                    blackPolylineOptions!!.color(R.color.black)
                                     blackPolylineOptions!!.width(5f)
                                     blackPolylineOptions!!.startCap(SquareCap())
                                     blackPolylineOptions!!.jointType(JointType.ROUND)
@@ -1625,6 +1629,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, SensorEventListene
                         .getReference(Common.USER_INFO)
                         .child(event!!.key!!)
                         .addListenerForSingleValueEvent(object: ValueEventListener{
+                            @RequiresApi(Build.VERSION_CODES.O)
                             override fun onDataChange(snapshot: DataSnapshot) {
 
                                 if(snapshot.exists()){
@@ -1658,6 +1663,11 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, SensorEventListene
                                         }
                                         .addOnSuccessListener { location ->
 
+                                            val current = LocalDateTime.now()
+
+                                            val formatter = DateTimeFormatter.ofLocalizedDateTime(FormatStyle.MEDIUM)
+                                            val formatted = current.format(formatter)
+
                                             //Create Trip Planner
 
                                             val tripPlanModel = TripPlanModel()
@@ -1674,8 +1684,14 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, SensorEventListene
                                             tripPlanModel.durationPickup = duration
                                             tripPlanModel.currentLat = location.latitude
                                             tripPlanModel.currentLng = location.longitude
+                                            tripPlanModel.time = formatted
+                                            /*tripPlanModel.collectionPhotos = null
+                                            tripPlanModel.dropOffPhotos = null*/
+
 
                                             tripNumberId = Common.createUniqueTripIdNumber(timeOffset)
+
+                                            tripPlanModel.collectionNumber = tripNumberId
 
                                             //Submit to Firebase
 
@@ -1698,11 +1714,11 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, SensorEventListene
 
                                                 }
 
-                                            FirebaseDatabase.getInstance().getReference(Common.USER_INFO)
+                                           /* FirebaseDatabase.getInstance().getReference(Common.USER_INFO)
                                                     .child(event!!.key!!)
                                                     .child("Collections")
                                                     .child(tripNumberId!!)
-                                                    .setValue(tripPlanModel)
+                                                    .setValue(tripPlanModel)*/
 
                                         }
 
