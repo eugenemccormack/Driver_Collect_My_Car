@@ -1668,9 +1668,41 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, SensorEventListene
                                             val formatter = DateTimeFormatter.ofLocalizedDateTime(FormatStyle.MEDIUM)
                                             val formatted = current.format(formatter)
 
+
+
                                             //Create Trip Planner
 
                                             val tripPlanModel = TripPlanModel()
+
+                                            val convertAddressGeoCoder = Geocoder(this@MapsActivity, Locale.getDefault())
+
+                                            var latlong = event.pickupLocationString!!.split(',');
+                                            var latitude = (latlong[0]).toDouble()
+                                            var longitude = (latlong[1]).toDouble()
+
+                                            var cityName = ""
+
+                                            val addressList : List<Address>?
+
+                                            try {
+
+                                                addressList = convertAddressGeoCoder.getFromLocation(latitude,
+                                                        longitude, 1)
+
+
+                                                if (addressList.isNotEmpty())
+
+                                                    cityName = addressList[0].getAddressLine(0)
+
+
+                                                tripPlanModel.originString= cityName
+
+                                            }
+                                            catch (e: IOException){
+
+                                                Log.d("MapsActivity", "IOException $e")
+
+                                            }
 
                                             //val collectionPhotos = CollectionPhotos()
 
@@ -1679,7 +1711,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, SensorEventListene
                                             tripPlanModel.driverInfoModel = Common.currentUser
                                             tripPlanModel.userModel = userModel
                                             tripPlanModel.origin = event.pickupLocation
-                                            tripPlanModel.originString = event.pickupLocationString
+                                            //tripPlanModel.originString = event.pickupLocationString
                                             tripPlanModel.destination = event.destinationLocation
                                             tripPlanModel.destinationString = event.destinationLocationString
                                             tripPlanModel.distancePickup = distance
