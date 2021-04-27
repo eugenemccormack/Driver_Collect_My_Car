@@ -10,10 +10,10 @@
 
     <item
         android:id="@+id/mItem2"
-        android:title="Navigation Page"
-        android:icon="@drawable/ic_baseline_navigation_24"/>
+        android:title="History"
+        android:icon="@drawable/ic_baseline_history_24"/>
 
-    <item
+<!--    <item
         android:id="@+id/mItem3"
         android:title="Senor Activity"
         android:icon="@drawable/ic_baseline_sensors_24"/>
@@ -21,7 +21,7 @@
     <item
         android:id="@+id/mItem4"
         android:title="View Graph"
-        android:icon="@drawable/ic_baseline_bar_chart_24"/>
+        android:icon="@drawable/ic_baseline_bar_chart_24"/>-->
 
     <item
         android:id="@+id/mItem5"

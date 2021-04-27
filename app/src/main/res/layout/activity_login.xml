@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white">
+    android:background="@color/white"
+    tools:context=".LoginActivity">
 
 <!--    <TextView
         android:id="@+id/textView2"
@@ -85,14 +86,34 @@
         app:layout_constraintStart_toStartOf="@+id/login_button_login"
         app:layout_constraintTop_toBottomOf="@+id/login_button_login" />-->
 
+
+    <TextView
+        android:id="@+id/login_textView_login2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="Collect My Car"
+        android:textAppearance="@style/TextAppearance.AppCompat.Title"
+        android:textColor="#0A1482"
+        android:textSize="40dp"
+        app:layout_constraintBottom_toTopOf="@+id/email_editText_login"
+        app:layout_constraintEnd_toEndOf="@+id/email_editText_login"
+        app:layout_constraintHorizontal_bias="0.439"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/email_textView_register"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.265" />
+
     <TextView
         android:id="@+id/login_textView_login"
         android:layout_width="210dp"
         android:layout_height="60dp"
         android:gravity="center"
-        android:text="Driver Login"
+        android:text="Login"
         android:textColor="#0A1482"
-        android:textSize="30dp"
+        android:textSize="25dp"
+        android:textAppearance="@style/TextAppearance.AppCompat.Title"
         app:layout_constraintBottom_toTopOf="@+id/email_editText_login"
         app:layout_constraintEnd_toEndOf="@+id/email_editText_login"
         app:layout_constraintHorizontal_bias="0.462"
@@ -100,7 +121,7 @@
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintStart_toStartOf="@+id/email_textView_register"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.652" />
+        app:layout_constraintVertical_bias="0.756" />
 
     <EditText
         android:id="@+id/email_editText_login"

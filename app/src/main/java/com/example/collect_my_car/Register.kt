@@ -25,9 +25,21 @@ class Register : AppCompatActivity() {
 
     private var fileUri : Uri? = null
 
+    private var licenceFileUri : Uri? = null
+
+    //lateinit var licenceImage: String
+
+    var licenceImage: String? = null
+
+    var buttonID = false
+
+    //var photos = "test"
+
          override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_register)
+
+             //var photos = "test"
 
 
              //photo_button_user.setOnClickListener {
@@ -39,6 +51,18 @@ class Register : AppCompatActivity() {
                //  startActivityForResult(intent, 1)
 
              //}
+
+             licence_upload_button_register.setOnClickListener {
+
+
+                 buttonID = true
+
+                 Log.d("Register", "Button ID $buttonID")
+
+                 selectLicenceDocuments()
+
+
+             }
 
              iv_profileImage.setOnClickListener {
 
@@ -65,6 +89,13 @@ class Register : AppCompatActivity() {
 
     }
 
+    private fun selectLicenceDocuments() {
+
+        ImagePicker.with(this)
+                .crop().compress(1024).maxResultSize(1080, 1080).start()
+
+    }
+
     private fun selectImage() {
 
         ImagePicker.with(this)
@@ -82,17 +113,38 @@ class Register : AppCompatActivity() {
         when(resultCode){
             Activity.RESULT_OK -> {
 
-                fileUri = data?.data
+                if(buttonID){
 
-                iv_profileImage.setImageURI(fileUri)
+                    buttonID = false
+
+
+                    licenceFileUri = data?.data
+
+                    Log.d("Register", "licenceFileUri " + licenceFileUri)
+
+
+                }
+
+                else{
+
+
+
+
+                    fileUri = data?.data
+
+                    Log.d("Register", "fileUri " + fileUri)
+
+                    iv_profileImage.setImageURI(fileUri)
+
+                }
 
             }
 
-                ImagePicker.RESULT_ERROR -> {
+            ImagePicker.RESULT_ERROR -> {
 
-                    Toast.makeText(this, ImagePicker.getError(data), Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, ImagePicker.getError(data), Toast.LENGTH_SHORT).show()
 
-                }
+            }
 
                 else -> {
 
@@ -103,20 +155,6 @@ class Register : AppCompatActivity() {
 
 
         }
-
-        /*if(resultCode == 1 && requestCode == Activity.RESULT_OK && data != null){
-
-            Log.d("MainActivity", "Photo was Selected 2")
-
-            val uri = data.data
-
-            val bitmap = MediaStore.Images.Media.getBitmap(contentResolver, uri)
-
-            //val bitmapDrawable = BitmapDrawable(bitmap)
-            val bitmapDrawable = BitmapDrawable(this.resources,bitmap)
-            photo_button_user.setBackground(bitmapDrawable)
-
-        }*/
 
 
     }
@@ -129,39 +167,24 @@ class Register : AppCompatActivity() {
 
 
         val model = DriverInfoModel()
-/*
-        if(fileUri == null) {
 
-            Toast.makeText(this, "ERROR - Please Enter Photo", Toast.LENGTH_SHORT).show()
-
-            return
-        }
-
-        val filename = UUID.randomUUID().toString()
-
-        val ref = FirebaseStorage.getInstance().getReference("/images/$filename")
-
-        ref.putFile(fileUri!!)
-            .addOnSuccessListener {
-
-                Log.d("Main", "Successfully Uploaded Image :  ${it.metadata?.path}")
-
-                ref.downloadUrl.addOnSuccessListener {
-
-                    fileUri = it
-
-
-                    Log.d("Main", "Image File Location : $it")
-
-                }
-
-            }*/
-
-        //model.image = fileUri.toString()
         model.name = username_editText_register.text.toString()
         model.phone = phone_editText_register.text.toString()
         model.email = email_editText_register.text.toString()
         val password = password_editText_register.text.toString()
+        val confirmPassword = confirm_password_editText_register.text.toString()
+
+        model.address1 = address1_editText_register.text.toString()
+        model.address2 = address2_editText_register.text.toString()
+        model.county = county_editText_register.text.toString()
+
+        model.licenceSurname = licence_surname_editText_register.text.toString()
+        model.licenceFirstName = licence_firstname_editText_register.text.toString()
+        val licenceBOD = licence_dob_editText_register.text.toString()
+        val licenceIssueDate = licence_issue_editText_register.text.toString()
+        val licenceExpiryDate = licence_expiry_editText_register.text.toString()
+        val licenceDriverNumber = licence_driver_number_editText_register.text.toString()
+        model.licenceNumber = licence_number_editText_register.text.toString()
 
         if(model.name.isEmpty()){
 
@@ -187,6 +210,30 @@ class Register : AppCompatActivity() {
 
         }
 
+        else if(model.address1!!.isEmpty()){
+
+            Toast.makeText(this, "ERROR - Please Enter an Address Line 1", Toast.LENGTH_SHORT).show()
+
+            return
+
+        }
+
+        else if(model.address2!!.isEmpty()){
+
+            Toast.makeText(this, "ERROR - Please Enter an Address Line 2", Toast.LENGTH_SHORT).show()
+
+            return
+
+        }
+
+        else if(model.county!!.isEmpty()){
+
+            Toast.makeText(this, "ERROR - Please Enter a County", Toast.LENGTH_SHORT).show()
+
+            return
+
+        }
+
         else if(password.isEmpty()){
 
             Toast.makeText(this, "ERROR - Please Enter a Password", Toast.LENGTH_SHORT).show()
@@ -195,9 +242,89 @@ class Register : AppCompatActivity() {
 
         }
 
+        else if(confirmPassword.isEmpty()){
+
+            Toast.makeText(this, "ERROR - Please Enter a Confirm Password", Toast.LENGTH_SHORT).show()
+
+            return
+
+        }
+
+        else if(model.licenceSurname!!.isEmpty()){
+
+            Toast.makeText(this, "ERROR - Please Enter Licence Surname", Toast.LENGTH_SHORT).show()
+
+            return
+
+        }
+
+        else if(model.licenceFirstName!!.isEmpty()){
+
+            Toast.makeText(this, "ERROR - Please Enter Licence First Name", Toast.LENGTH_SHORT).show()
+
+            return
+
+        }
+
+        else if(licenceBOD.isEmpty()){
+
+            Toast.makeText(this, "ERROR - Please Enter Licence Date of Birth", Toast.LENGTH_SHORT).show()
+
+            return
+
+        }
+
+        else if(licenceIssueDate.isEmpty()){
+
+            Toast.makeText(this, "ERROR - Please Enter Licence Issue Date", Toast.LENGTH_SHORT).show()
+
+            return
+
+        }
+
+        else if(licenceExpiryDate.isEmpty()){
+
+            Toast.makeText(this, "ERROR - Please Enter Licence Expiry Date", Toast.LENGTH_SHORT).show()
+
+            return
+
+        }
+
+        else if(licenceDriverNumber!!.isEmpty()){
+
+            Toast.makeText(this, "ERROR - Please Enter Licence Driver Number", Toast.LENGTH_SHORT).show()
+
+            return
+
+        }
+
+        else if(model.licenceNumber!!.isEmpty()){
+
+            Toast.makeText(this, "ERROR - Please Enter Licence Number", Toast.LENGTH_SHORT).show()
+
+            return
+
+        }
+
+        if(password != confirmPassword){
+
+            Toast.makeText(this, "ERROR - Confirmation Password Does Not Match, Try Again", Toast.LENGTH_SHORT).show()
+
+            return
+
+        }
+
         if(fileUri == null) {
 
             Toast.makeText(this, "ERROR - Please Select A Photo", Toast.LENGTH_SHORT).show()
+
+            return
+
+        }
+
+        if(licenceFileUri== null){
+
+            Toast.makeText(this, "ERROR - Please Upload Licence Details 1", Toast.LENGTH_SHORT).show()
 
             return
 
@@ -212,30 +339,6 @@ class Register : AppCompatActivity() {
 
                 if(!it.isSuccessful) return@addOnCompleteListener
 
-/*
-                driverInfoRef.child(FirebaseAuth.getInstance().currentUser!!.uid)
-                        .setValue(model)
-                        .addOnFailureListener { e ->
-
-                            Toast.makeText(this, e.message, Toast.LENGTH_SHORT).show()
-
-                        }
-
-                        .addOnSuccessListener {
-
-                            Toast.makeText(this, "Registration Successful", Toast.LENGTH_SHORT).show()
-
-                        }*/
-
-
-               // val uid = FirebaseAuth.getInstance().uid ?: ""
-                //val ref = FirebaseDatabase.getInstance().getReference("/DriverInfo/$uid")
-
-               // val user = DriverInfo(uid, username_editText_register.text.toString(), phone_editText_register.text.toString(), email_editText_register.text.toString())
-
-                //ref.setValue(user)
-               /* driverInfoRef.child(FirebaseAuth.getInstance().currentUser!!.uid)
-                        .setValue(model)*/
 
                 Log.d("Main", "Successfully Create User with UID: ${it.result?.user!!.uid}")
 
@@ -258,6 +361,14 @@ class Register : AppCompatActivity() {
             Toast.makeText(this, "ERROR - Please Select A Photo", Toast.LENGTH_SHORT).show()
 
             return
+        }
+
+        if(licenceFileUri== null){
+
+            Toast.makeText(this, "ERROR - Please Upload Licence Details 2", Toast.LENGTH_SHORT).show()
+
+            return
+
         }
 
         val filename = UUID.randomUUID().toString()
@@ -285,19 +396,142 @@ class Register : AppCompatActivity() {
 
             }
 
+/*        val ref2 = FirebaseStorage.getInstance().getReference("/licencedetails/$filename")
+
+        ref2.putFile(licenceFileUri!!)
+                .addOnSuccessListener {
+
+                    Log.d("Main", "Successfully Uploaded Image :  ${it.metadata?.path}")
+
+                    ref2.downloadUrl.addOnSuccessListener {
+
+                        //it.toString()
+
+                        Log.d("Main", "Licence Image File Location : $it")
+
+                        saveLicenceDocument(it.toString())
+
+                        Log.d("Main", "saveLicenceDocument: " + it.toString())
+
+                        //licenceImage = it.toString()
+
+                        //var profileImageUrl: String  = it.toString()
+
+                        // Log.d("Main", "licenceImage : " + licenceImage)
+
+                        Log.d("Main", "Licence Image File Location : $it")
+
+                    }
+
+                }*/
+
     }
 
+/*    private fun saveLicenceDocument(profileImageUrla: String){
+
+*//*        val model = UserModel()
+*//**//*
+        database = FirebaseDatabase.getInstance()
+        userInfoRef = database.getReference(Common.USER_INFO_REFERENCE)*//**//*
+
+        model.licenceDocuments = profileImageUrl*//*
+
+        val model = DriverInfoModel()
+
+        model.licenceDocuments = profileImageUrla
+
+        licenceImage = profileImageUrla
+
+        Log.d("Main", "licenceImage : " + licenceImage)
+
+        Log.d("Main", "model.insuranceDocuments : " + model.licenceDocuments)
+
+
+*//*
+        userInfoRef.child(FirebaseAuth.getInstance().currentUser!!.uid)
+            .setValue(model)*//*
+
+
+    }*/
+
     private fun saveDriverInfo(profileImageUrl: String){
+
+        //var photos = "test"
+
+        val filename = UUID.randomUUID().toString()
+
+        val ref2 = FirebaseStorage.getInstance().getReference("/licencedetails/$filename")
+
+        ref2.putFile(licenceFileUri!!)
+                .addOnSuccessListener {
+
+                    Log.d("Main", "Successfully Uploaded Image :  ${it.metadata?.path}")
+
+                    ref2.downloadUrl.addOnSuccessListener {
+
+                        Log.d("Main", "Licence Image File Location : $it")
+
+                        Log.d("Main", "saveLicenceDocument: " + it.toString())
+
+                        //val model = DriverInfoModel()
+
+                        var photos = it.toString()
+
+                        Log.d("Main", "Photos: " + photos)
+
+                        //model.licenceDocuments = photos
+
+                        Log.d("Main", "Licence Image File Location : $it")
+
+
 
         val model = DriverInfoModel()
 
         database = FirebaseDatabase.getInstance()
         driverInfoRef = database.getReference(Common.DRIVER_INFO_REFERENCE)
 
+/*        if(licenceImage== null){
+
+            Toast.makeText(this, "ERROR - Please Upload Licence Details", Toast.LENGTH_SHORT).show()
+
+            return
+
+        }*/
+
+        //model.licenceDocuments = licenceImage
+
+        //Log.d("Main", "saveUserInfo licenceImage : " + model.licenceDocuments)
+
+/*        if(licenceImage== null){
+
+            Toast.makeText(this, "ERROR - Please Upload Licence Details", Toast.LENGTH_SHORT).show()
+
+            return
+        }*/
+
+        //model.licenceDocuments = photos
+
+
         model.image = profileImageUrl
         model.name = username_editText_register.text.toString()
         model.phone = phone_editText_register.text.toString()
         model.email = email_editText_register.text.toString()
+
+        model.address1 = address1_editText_register.text.toString()
+        model.address2 = address2_editText_register.text.toString()
+        model.county = county_editText_register.text.toString()
+
+        model.licenceSurname = licence_surname_editText_register.text.toString()
+        model.licenceFirstName = licence_firstname_editText_register.text.toString()
+        model.licenceBOD = licence_dob_editText_register.text.toString().toInt()
+        model.licenceIssueDate = licence_issue_editText_register.text.toString().toInt()
+        model.licenceExpiryDate = licence_expiry_editText_register.text.toString().toInt()
+        model.licenceDriverNumber = licence_driver_number_editText_register.text.toString().toInt()
+        model.licenceNumber = licence_number_editText_register.text.toString()
+
+        model.licenceDocuments = photos //Image
+
+        Log.d("Main", "PHOTO MODEL : " + model.licenceDocuments)
 
 
         driverInfoRef.child(FirebaseAuth.getInstance().currentUser!!.uid)
@@ -308,6 +542,10 @@ class Register : AppCompatActivity() {
         startActivity(intent)
 
         finish()
+
+    }
+
+                }
 
     }
 

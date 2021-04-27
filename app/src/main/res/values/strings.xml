@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Driver App</string>
+    <string name="app_name">Driver</string>
     <string name="title_activity_maps">Map</string>
     <string name="login">Login</string>
     <string name="Register">Register</string>
@@ -27,5 +27,6 @@
     <string name="complete_journey_failed">Complete Journey Failed</string>
     <string name="complete_journey_successful">Your Car have been Successfully Dropped Off, Thank You!</string>
     <string name="hard_braking">Hard Braking</string>
+
 
 </resources>

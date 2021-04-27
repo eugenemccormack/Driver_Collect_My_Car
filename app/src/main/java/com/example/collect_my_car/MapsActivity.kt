@@ -390,14 +390,14 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, SensorEventListene
 
                 R.id.mItem2 -> {
 
-                    intent = Intent(this, NavigationDrawerDriver::class.java)
+                    intent = Intent(this, History::class.java)
 
                     startActivity(intent)
 
-                    Toast.makeText(applicationContext, "Navigation Activity", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(applicationContext, "History Activity", Toast.LENGTH_SHORT).show()
                 }
 
-                R.id.mItem3 -> {
+/*                R.id.mItem3 -> {
 
                     intent = Intent(this, HomeActivity::class.java)
 
@@ -413,7 +413,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, SensorEventListene
                     startActivity(intent)
 
                     Toast.makeText(applicationContext, "Graph Activity", Toast.LENGTH_SHORT).show()
-                }
+                }*/
 
                 R.id.mItem5 -> {
 

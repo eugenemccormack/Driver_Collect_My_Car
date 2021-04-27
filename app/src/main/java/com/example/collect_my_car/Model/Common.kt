@@ -166,6 +166,8 @@ object Common {
 
     var currentUser : DriverInfoModel? = null
 
+    var collectionInfo: TripPlanModel?=null
+
     val DRIVER_INFO_REFERENCE: String = "DriverInfo"
 
     val DRIVERS_LOCATION_REFERENCE: String = "DriversLocation"

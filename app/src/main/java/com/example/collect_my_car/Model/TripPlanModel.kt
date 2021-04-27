@@ -40,7 +40,7 @@ class TripPlanModel {
 
     //var collectionPhotos: String? = null
 
-    var dropOffPhotos: String? = null
+/*    var dropOffPhotos: String? = null*/
 
     var collectionNumber: String? = null
 
