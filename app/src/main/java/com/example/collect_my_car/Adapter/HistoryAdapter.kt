@@ -11,6 +11,7 @@ import com.example.collect_my_car.R
 import kotlinx.android.synthetic.main.activity_recyclerview_layout.view.*
 
 class HistoryAdapter (val context: Context, val posts: List<TripPlanModel>, private val listener: OnItemClickListener): RecyclerView.Adapter<HistoryAdapter.MyViewHolder>()  {
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): HistoryAdapter.MyViewHolder {
 
         val itemView = LayoutInflater.from(context).inflate(R.layout.activity_recyclerview_layout, parent, false)

@@ -113,7 +113,7 @@ class NavigationDrawerDriver : AppCompatActivity() {
         val navPhone = headerView.findViewById<android.view.View>(R.id.nav_phone) as TextView
         image_avatar = headerView.findViewById<android.view.View>(R.id.nav_imageView) as ImageView
 
-        navName.setText(Common.buildNavMessage())
+        navName.setText("Welcome")//Common.buildNavMessage())(Common.buildNavMessage())
         navPhone.setText(Common.currentUser!!.phone)
 
         if(Common.currentUser != null && Common.currentUser!!.image != null){

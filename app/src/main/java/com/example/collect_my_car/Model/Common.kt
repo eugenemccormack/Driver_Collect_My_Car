@@ -19,13 +19,13 @@ import kotlin.random.Random
 object Common {
 
 
-    fun buildNavMessage(): String {
+/*    fun buildNavMessage(): String {
 
         return StringBuilder("Welcome ")
                 .append(currentUser!!.name)
                 .toString()
 
-    }
+    }*/
 
     fun showNotification(context: Context, id: Int, title: String?, body: String?, intent: Intent?) {
 

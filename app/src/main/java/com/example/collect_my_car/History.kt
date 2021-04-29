@@ -3,9 +3,7 @@ package com.example.collect_my_car
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
-import android.widget.ImageView
 import android.widget.Toast
-import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.collect_my_car.Adapter.HistoryAdapter
@@ -50,11 +48,6 @@ class History : AppCompatActivity(), HistoryAdapter.OnItemClickListener {
     lateinit var arrayTest: ArrayList<TripPlanModel>
 
     lateinit var adapter: HistoryAdapter
-
-
-    lateinit var toggle: ActionBarDrawerToggle
-
-    private lateinit var image_avatar: ImageView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

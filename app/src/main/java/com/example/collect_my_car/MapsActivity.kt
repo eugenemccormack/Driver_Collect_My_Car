@@ -456,8 +456,8 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, SensorEventListene
         val navPhone = headerView.findViewById<android.view.View>(R.id.nav_phone) as TextView
         image_avatar = headerView.findViewById<android.view.View>(R.id.nav_imageView) as ImageView
 
-        navName.setText(Common.buildNavMessage())
-        navPhone.setText(Common.currentUser!!.phone)
+        navName.setText("Welcome")//Common.buildNavMessage())
+        navPhone.setText(Common.currentUser!!.name)
 
         if(Common.currentUser != null && Common.currentUser!!.image != null){
 
@@ -647,7 +647,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, SensorEventListene
 
                 mMap.addMarker(MarkerOptions().position(destinationLatLng)
                         .title(driverRequestReceived!!.destinationLocationString)
-                        .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE)))
+                        .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED)))
 
                 //Draw Path to Destination
 
@@ -825,8 +825,8 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, SensorEventListene
                                     greyPolyline = mMap.addPolyline(polylineOptions)
 
                                     blackPolylineOptions = PolylineOptions()
-                                    blackPolylineOptions!!.color(R.color.black)
-                                    blackPolylineOptions!!.width(5f)
+                                    blackPolylineOptions!!.color(R.color.blue)
+                                    blackPolylineOptions!!.width(12f)
                                     blackPolylineOptions!!.startCap(SquareCap())
                                     blackPolylineOptions!!.jointType(JointType.ROUND)
                                     blackPolylineOptions!!.addAll(polylineList)
@@ -1468,7 +1468,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, SensorEventListene
                                     }
 
                                     polylineOptions = PolylineOptions()
-                                    polylineOptions!!.color(R.color.light_Blue)
+                                    polylineOptions!!.color(R.color.blue)
                                     polylineOptions!!.width(12f)
                                     polylineOptions!!.startCap(SquareCap())
                                     polylineOptions!!.jointType(JointType.ROUND)
@@ -1476,8 +1476,8 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, SensorEventListene
                                     greyPolyline = mMap.addPolyline(polylineOptions)
 
                                     blackPolylineOptions = PolylineOptions()
-                                    blackPolylineOptions!!.color(R.color.dark_Blue)
-                                    blackPolylineOptions!!.width(5f)
+                                    blackPolylineOptions!!.color(R.color.blue)
+                                    blackPolylineOptions!!.width(12f)
                                     blackPolylineOptions!!.startCap(SquareCap())
                                     blackPolylineOptions!!.jointType(JointType.ROUND)
                                     blackPolylineOptions!!.addAll(polylineList)
@@ -1534,7 +1534,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, SensorEventListene
                                     txt_estimate_time.setText(duration)
                                     txt_estimate_distance.setText(distance)
 
-                                    mMap.addMarker(MarkerOptions().position(destination).icon(BitmapDescriptorFactory.defaultMarker()).title("Collection Location"))
+                                    mMap.addMarker(MarkerOptions().position(destination).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)).title("Pickup Location"))//BitmapDescriptorFactory.defaultMarker()).title("Pickup Location"))
 
                                     Log.d("MapActivity", "createGeoFirePickupLocation")
 

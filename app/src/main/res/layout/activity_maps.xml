@@ -387,7 +387,7 @@
 
     <com.google.android.material.navigation.NavigationView
         android:id="@+id/navViewMaps"
-        android:layout_width="225dp"
+        android:layout_width="185dp"
         android:layout_height="match_parent"
         app:headerLayout="@layout/nav_header_main"
         app:menu="@menu/nav_header_menu"

@@ -130,14 +130,15 @@ class UserHistory: AppCompatActivity() {
 
         driver_price_history.text = Common.collectionInfo!!.distanceDestination
 
-        driver_name_history.text = Common.collectionInfo!!.driverInfoModel!!.name
-        driver_email_history.text = Common.collectionInfo!!.driverInfoModel!!.email
-        driver_phone_history.text = Common.collectionInfo!!.driverInfoModel!!.phone
+        driver_name_history.text = Common.collectionInfo!!.userModel!!.name
+        driver_email_history.text = Common.collectionInfo!!.userModel!!.email
+        driver_phone_history.text = Common.collectionInfo!!.userModel!!.phone
+        driver_price_history.text = "€25.00"
 
 
-        if (Common.collectionInfo != null && Common.collectionInfo!!.driverInfoModel!!.image != null) {
+        if (Common.collectionInfo != null && Common.collectionInfo!!.userModel!!.image != null) {
 
-            Glide.with(this).load(Common.collectionInfo!!.driverInfoModel!!.image).into(driver_profileImage)
+            Glide.with(this).load(Common.collectionInfo!!.userModel!!.image).into(driver_profileImage)
 
         }
 
