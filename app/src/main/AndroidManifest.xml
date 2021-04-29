@@ -28,7 +28,9 @@
 
         <activity android:name=".NavigationDrawerDriver"></activity>
         <activity android:name=".GraphActivity"></activity>
-        <activity android:name=".CameraActivity"></activity>
+        <activity android:name=".CameraActivity"
+            android:screenOrientation="portrait"/>
+
         <activity android:name=".ViewCollectionPhotos" />
         <activity android:name=".ViewDropOffPhotos" />
         <!--

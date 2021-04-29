@@ -133,7 +133,7 @@ class UserHistory: AppCompatActivity() {
         driver_name_history.text = Common.collectionInfo!!.userModel!!.name
         driver_email_history.text = Common.collectionInfo!!.userModel!!.email
         driver_phone_history.text = Common.collectionInfo!!.userModel!!.phone
-        driver_price_history.text = "€25.00"
+        driver_price_history.text = "€2.00"
 
 
         if (Common.collectionInfo != null && Common.collectionInfo!!.userModel!!.image != null) {

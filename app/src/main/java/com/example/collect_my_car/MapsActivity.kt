@@ -1336,13 +1336,13 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, SensorEventListene
 
             }
 
-            else if (y > 14.0){//10.0){ //previously x
+            else if (z > 14.0){//10.0){ //previously x they y
 
                 var v=getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
                 //v.vibrate(500)
                 //Toast.makeText(this, "Braking Hard -" + x.absoluteValue , Toast.LENGTH_LONG).show()
 
-                val braking = Save(y) //x
+                val braking = Save(z) //x
 
              FirebaseDatabase.getInstance()
                     .getReference(Common.TRIP)
@@ -1363,7 +1363,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, SensorEventListene
                          hard_braking.visibility = View.GONE
                          complete_Pictures.visibility = View.VISIBLE
 
-                         Toast.makeText(this, "Hard Braking Detected - " + y.absoluteValue , Toast.LENGTH_LONG).show()
+                         Toast.makeText(this, "Hard Braking Detected - " + z.absoluteValue , Toast.LENGTH_LONG).show()
 
                     }
 
