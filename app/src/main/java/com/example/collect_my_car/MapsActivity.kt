@@ -1551,14 +1551,14 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, SensorEventListene
 
                                     //Countdown Timer
 
-                                    countDownEvent = Observable.interval(100, TimeUnit.MILLISECONDS)
+                                    countDownEvent = Observable.interval(200, TimeUnit.MILLISECONDS)
                                             .observeOn(AndroidSchedulers.mainThread())
                                             .doOnNext { x ->
 
                                                 circularProgressBar.progress += 1f
 
                                             }
-                                            .takeUntil{aLong -> aLong == "100".toLong()} //10 Seconds
+                                            .takeUntil{aLong -> aLong == "200".toLong()} //10 Seconds
                                             .doOnComplete{
 
                                                 //Toast.makeText(this@MapsActivity, "Collection Accepted", Toast.LENGTH_LONG).show()
