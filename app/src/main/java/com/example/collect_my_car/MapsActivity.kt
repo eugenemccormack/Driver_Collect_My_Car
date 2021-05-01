@@ -13,7 +13,7 @@ import android.hardware.SensorManager
 import android.location.Address
 import android.location.Geocoder
 import android.location.Location
-import android.location.LocationManager
+import android.net.Uri
 import android.os.*
 import android.text.TextUtils
 import android.util.Log
@@ -79,7 +79,7 @@ import java.util.concurrent.TimeUnit
 import kotlin.collections.HashMap
 import kotlin.math.absoluteValue
 
-class MapsActivity : AppCompatActivity(), OnMapReadyCallback, SensorEventListener { //AppCompatActivity(), OnMapReadyCallback, LocationListener, SensorEventListener {
+class MapsActivity : AppCompatActivity(), OnMapReadyCallback, SensorEventListener {
 
     companion object{
 
@@ -87,23 +87,16 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, SensorEventListene
         val MESSGAE2 = "Message2"
     }
 
+    private var customerPhoneCall: String = ""
+
+
     lateinit var toggle: ActionBarDrawerToggle
 
     private lateinit var image_avatar : ImageView
 
-    private var cityName: String = ""
-
     private lateinit var mMap: GoogleMap
 
-    private lateinit var mapFragment: SupportMapFragment
 
-    private val LOCATION_REQUEST_CODE = 101
-
-    private lateinit var locationManager: LocationManager
-    private lateinit var tvGpsLocation: TextView
-    private val locationPermissionCode = 2
-
-    var sensor:Sensor?=null
     var sensorManager: SensorManager?=null
 
     var xold = 0.0
@@ -134,8 +127,6 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, SensorEventListene
     private lateinit var txt_estimate_time: TextView
     private lateinit var txt_estimate_distance: TextView
 
-    private lateinit var txt_rating: TextView
-    private lateinit var txt_type: TextView
     private lateinit var image_round: ImageView
     private lateinit var start_journey: CardView
     private lateinit var txt_user_name: TextView
@@ -165,7 +156,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, SensorEventListene
 
             take_Pictures.isEnabled = true
 
-            //Before Camera Function Added //start_journey_button.isEnabled = true
+
 
             UserUtils.sendNotifyToUser(this@MapsActivity, root_layout, key)
 
@@ -184,7 +175,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, SensorEventListene
 
                 take_Pictures.isEnabled = false
 
-            //Before Camera Function Added //start_journey_button.isEnabled = false
+
 
         }
 
@@ -216,7 +207,6 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, SensorEventListene
 
             complete_Pictures.isEnabled = true
 
-            //Before Complete Photos Added //complete_journey_button.isEnabled = true
 
             if(destinationGeoQuery != null){
 
@@ -289,7 +279,6 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, SensorEventListene
         override fun onCancelled(p0: DatabaseError) {
 
             Toast.makeText(this@MapsActivity, p0.message, Toast.LENGTH_SHORT).show()
-            //Snackbar.make(mapFragment.requireView(), p0.message,Snackbar.LENGTH_LONG).show()
 
         }
 
@@ -354,18 +343,6 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, SensorEventListene
 
          setContentView(R.layout.activity_maps)
 
-
-
-/*        // Obtain the SupportMapFragment and get notified when the map is ready to be used.
-        val mapFragment = supportFragmentManager
-                .findFragmentById(R.id.map) as SupportMapFragment
-        mapFragment.getMapAsync(this)*/
-
-/*        sensorManager=getSystemService(Context.SENSOR_SERVICE) as SensorManager
-        *//*sensor=sensorManager!!.getDefaultSensor(Sensor.TYPE_ACCELEROMETER)*//*
-        sensorManager!!.registerListener(this,
-                sensorManager!!.getDefaultSensor(Sensor.TYPE_ACCELEROMETER),
-                SensorManager.SENSOR_DELAY_NORMAL)*/
 
         toggle = ActionBarDrawerToggle(this, drawerLayoutMaps, R.string.open, R.string.closed)
 
@@ -466,13 +443,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, SensorEventListene
         }
 
 
-
-
-/*        locationButton.setOnClickListener {
-            getLocation()
-        }*/
-
-        initViews()//(root)
+        initViews()
 
         init()
 
@@ -491,8 +462,6 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, SensorEventListene
         txt_estimate_distance = findViewById(R.id.txt_estimate_distance) as TextView
         txt_estimate_time = findViewById(R.id.txt_estimate_time) as TextView
 
-        txt_rating  = findViewById(R.id.txt_rating) as TextView
-        txt_type = findViewById(R.id.txt_type) as TextView
         image_round = findViewById(R.id.image_round) as ImageView
         start_journey = findViewById(R.id.start_journey) as CardView
         txt_user_name= findViewById(R.id.txt_user_name) as TextView
@@ -532,11 +501,6 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, SensorEventListene
                     UserUtils.sendDeclineRequest(this, root_layout, driverRequestReceived!!.key!!)
 
                     driverRequestReceived = null
-
-                    //this@RequestDriverActivity,
-                    //        main_layout,
-                    //        foundDriver,
-                    //        target)
 
                 }
 
@@ -578,15 +542,8 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, SensorEventListene
                                 makeDriverOnline(location)
 
                             }
-
-
                 }
-
-
-
-
             }
-
         }
 
         take_Pictures.setOnClickListener {
@@ -600,9 +557,6 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, SensorEventListene
             intent.putExtra(MESSGAE2, tripNumberId)
 
             startActivity(intent)
-            /*intent = Intent(this, CameraActivity::class.java)
-
-            startActivity(intent)*/
 
             take_Pictures.visibility = View.GONE
 
@@ -696,7 +650,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, SensorEventListene
 
         complete_journey_button.setOnClickListener{
 
-            //Toast.makeText(this@MapsActivity, "Complete Journey", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this@MapsActivity, "Drop Off Complete, Thank You", Toast.LENGTH_SHORT).show()
 
             val update_trip = HashMap<String, Any>()
 
@@ -741,12 +695,8 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, SensorEventListene
                                     take_Pictures.isEnabled = false
                                     take_Pictures.visibility = View.VISIBLE
 
-                                    //Before Camera Function Added //start_journey_button.isEnabled = false
-                                   //Before Camera Function Added  //start_journey_button.visibility = View.VISIBLE
-
                                     destinationGeoFire = null
                                     pickupGeoFire = null
-
 
                                     driverRequestReceived = null
 
@@ -760,6 +710,14 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, SensorEventListene
                     }
 
 
+
+        }
+
+        image_phone.setOnClickListener {
+
+            val dialIntent = Intent(Intent.ACTION_DIAL)
+            dialIntent.data = Uri.parse("tel:" + customerPhoneCall)
+            startActivity(dialIntent)
 
         }
 
@@ -875,8 +833,6 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, SensorEventListene
         GeoLocation(destination.latitude, destination.longitude), {key1, error ->
 
 
-
-
         })
 
     }
@@ -979,9 +935,6 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, SensorEventListene
 
                     mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(newPos, 18f))
 
-                    /*   val saveCityName = cityName // Save Old City Name to Variable
-
-                       cityName = LocationUtils.getAddressFromLocation(requireContext(), location)*/
 
                     if(!isTripStart) {
 
@@ -1012,14 +965,9 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, SensorEventListene
                         }
 
                     }
-
-
-
                 }
             }
-
         }
-
     }
 
     private fun makeDriverOnline(location: Location) {
@@ -1077,19 +1025,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, SensorEventListene
 
                 if (error != null)
 
-                    Toast.makeText(
-                            this@MapsActivity,
-                            error.message,
-                            Toast.LENGTH_SHORT
-                    ).show()
-
-                //Snackbar.make(mapFragment.requireView(), error.message, Snackbar.LENGTH_LONG).show()
-
-                /*else
-
-            //Snackbar.make(mapFragment.requireView(), "Your Online", Snackbar.LENGTH_SHORT).show()
-                Toast.makeText(this@MapsActivity, "Your Online", Toast.LENGTH_SHORT).show()*/
-
+                    Toast.makeText(this@MapsActivity,error.message,Toast.LENGTH_SHORT).show()
             }
 
             registerOnlineSystem()
@@ -1115,16 +1051,6 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, SensorEventListene
 
     }
 
-
-    /**
-     * Manipulates the map once available.
-     * This callback is triggered when the map is ready to be used.
-     * This is where we can add markers or lines, add listeners or move the camera. In this case,
-     * we just add a marker near Sydney, Australia.
-     * If Google Play services is not installed on the device, the user will be prompted to install
-     * it inside the SupportMapFragment. This method will only be triggered once the user has
-     * installed Google Play services and returned to the app.
-     */
     override fun onMapReady(googleMap: GoogleMap) {
         mMap = googleMap
 
@@ -1201,107 +1127,17 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, SensorEventListene
 
 
             }).check()
-/*
-        val myLatitude = intent.getDoubleExtra(HomeActivity.MESSGAE1, -1.0)
-        val myLongitude = intent.getDoubleExtra(HomeActivity.MESSGAE2, -2.0)
 
-        Log.d("Location Latitude", " CURRENT GPS Latitude : " + myLatitude)
-        Log.d("Location Longitude", " CURRENT GPS Longitude : " + myLongitude)
-
-        // Add a marker in Sydney and move the camera
-
-        val uid = FirebaseAuth.getInstance().uid ?: ""
-        val ref = FirebaseDatabase.getInstance().getReference("/users/location/$uid").push()
-
-        val user = locationSave(myLatitude, myLongitude)
-
-        ref.setValue(user)
-
-        val myCurrentLocation = LatLng(myLatitude, myLongitude)*/
-        
-   /*     mMap.uiSettings.isMapToolbarEnabled = true
-        mMap.uiSettings.isZoomControlsEnabled = true
-        mMap.addMarker(MarkerOptions().position(myCurrentLocation).title("Current Location"))
-        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(myCurrentLocation, 15F))*/
-
-
-/*        if (mMap != null) {
-            val permission = ContextCompat.checkSelfPermission(this,
-                    Manifest.permission.ACCESS_FINE_LOCATION)
-
-            if (permission == PackageManager.PERMISSION_GRANTED) {
-                mMap.isMyLocationEnabled = true
-
-
-            } else {
-                requestPermission(
-                        Manifest.permission.ACCESS_FINE_LOCATION,
-                        LOCATION_REQUEST_CODE)
-            }
-        }*/
         Toast.makeText(this@MapsActivity, "Your Online", Toast.LENGTH_SHORT).show()
     }
-
-/*    private fun getLocation() {
-        locationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager
-        if ((ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED)) {
-            ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), locationPermissionCode)
-        }
-        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 2000, 5f, this)
-    }
-   override fun onLocationChanged(location: Location) {
-
-        val uid = FirebaseAuth.getInstance().uid ?: ""
-        val ref = FirebaseDatabase.getInstance().getReference("/currentLocation/$uid")//"/users/location/$uid").push()
-
-        val user = locationchanged(location.latitude , location.longitude)
-
-        ref.setValue(user)
-        //tvGpsLocation = findViewById(R.id.textView)
-      //  tvGpsLocation.text = "Latitude: " + location.latitude + " , Longitude: " + location.longitude
-    }*/
-
-
-
-
-/*    private fun requestPermission(permissionType: String,
-                                   requestCode: Int) {
-
-        ActivityCompat.requestPermissions(this,
-                arrayOf(permissionType), requestCode
-        )
-    }
-
-    override fun onRequestPermissionsResult(requestCode: Int,
-                                             permissions: Array<String>, grantResults: IntArray) {
-
-        when (requestCode) {
-            LOCATION_REQUEST_CODE -> {
-
-                if (grantResults.isEmpty() || grantResults[0] !=
-                        PackageManager.PERMISSION_GRANTED) {
-                    Toast.makeText(this,
-                            "Unable to show location - permission required",
-                            Toast.LENGTH_LONG).show()
-                } else {
-
-                    val mapFragment = supportFragmentManager
-                            .findFragmentById(R.id.map) as SupportMapFragment
-                    mapFragment.getMapAsync(this)
-                }
-            }
-        }
-    }*/
 
     private fun startAccelerometer(){
 
         sensorManager=getSystemService(Context.SENSOR_SERVICE) as SensorManager
-        /*sensor=sensorManager!!.getDefaultSensor(Sensor.TYPE_ACCELEROMETER)*/
+
         sensorManager!!.registerListener(this,
                 sensorManager!!.getDefaultSensor(Sensor.TYPE_ACCELEROMETER),
                 SensorManager.SENSOR_DELAY_NORMAL)
-
-
 
     }
 
@@ -1403,13 +1239,6 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, SensorEventListene
         sensorManager!!.unregisterListener(this)
     }*/
 
-
-/*    private class locationSave(val Latitude: Double, val Longitude: Double) {
-
-    }
-    private class locationchanged(val latitude: Double, val longitude: Double) {
-
-    }*/
     private class Save(val sensor: Float) {
 
     }
@@ -1558,7 +1387,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, SensorEventListene
                                                 circularProgressBar.progress += 1f
 
                                             }
-                                            .takeUntil{aLong -> aLong == "200".toLong()} //10 Seconds
+                                            .takeUntil{aLong -> aLong == "100".toLong()} //10 Seconds
                                             .doOnComplete{
 
                                                 //Toast.makeText(this@MapsActivity, "Collection Accepted", Toast.LENGTH_LONG).show()
@@ -1602,12 +1431,6 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, SensorEventListene
 
 
         })
-
-       //Log.d("MapActivity", "pickupgeofire" + pickupGeoFire)
-
-        //start_journey_button.isEnabled = true //Temporally Put Here For Testing
-
-        //UserUtils.sendNotifyToUser(this, root_layout, key)//Temporally Put Here For Testing
 
     }
 
@@ -1744,6 +1567,8 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, SensorEventListene
                                                     txt_start_estimate_distance.setText(distance)
                                                     txt_start_estimate_time.setText(duration)
 
+                                                    customerPhoneCall = userModel!!.phone
+
                                                     setOfflineModeFroDriver(event, duration, distance)
 
 
@@ -1817,7 +1642,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, SensorEventListene
 
             color = ContextCompat.getColor(this , R.color.lightOrange)
             circularProgressBar.indeterminateMode = true
-            txt_rating.setCompoundDrawablesWithIntrinsicBounds(0,0,R.drawable.ic_baseline_star_24_gray, 0)
+
 
         }
         else{
@@ -1825,18 +1650,15 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, SensorEventListene
             color = ContextCompat.getColor(this , R.color.black)
             circularProgressBar.indeterminateMode = false
             circularProgressBar.progress = 0f
-            txt_rating.setCompoundDrawablesWithIntrinsicBounds(0,0,R.drawable.ic_baseline_star_24, 0)
+
 
         }
 
         txt_estimate_time.setTextColor(color)
         txt_estimate_distance.setTextColor(color)
-        txt_rating.setTextColor(color)
-        txt_type.setTextColor(color)
         ImageViewCompat.setImageTintList(image_round, ColorStateList.valueOf(color))
 
     }
-
 
 
     @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)
@@ -1860,21 +1682,13 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, SensorEventListene
 
             override fun onFinish() {
 
-                Toast.makeText(this@MapsActivity, getString(R.string.times_up), Toast.LENGTH_LONG ).show()
+                //Toast.makeText(this@MapsActivity, getString(R.string.times_up), Toast.LENGTH_LONG ).show()
 
             }
-
 
         }
                 .start()
                 Log.d("MapActivity", "CountDown Timer Started")
 
-
-
     }
-
-
 }
-
-
-

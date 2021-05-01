@@ -89,29 +89,6 @@ class LoginActivity: AppCompatActivity(){
 
                 Log.d("Main", "Successfully Signed in with User with UID: ${it.result?.user!!.uid}")
 
-                /*val intent = Intent(this, MapsActivity::class.java) //HomeActivity
-
-               // intent.putExtra(MESSGAE, email)
-
-                startActivity(intent)*/
-
-               /* FirebaseInstanceId.getInstance().instanceId
-                    .addOnFailureListener { e->
-
-
-                        Toast.makeText(this, e.message + "TEST", Toast.LENGTH_SHORT).show()
-
-                    }
-
-                    .addOnSuccessListener { instanceIdResult ->
-
-
-                        Log.d("TOKEN", instanceIdResult.token + " NOTIFY")
-                        UserUtils.updateToken(this@LoginActivity, instanceIdResult.token)
-
-
-
-                    }*/
 
                 firebaseAuth.addAuthStateListener(listener)
 
