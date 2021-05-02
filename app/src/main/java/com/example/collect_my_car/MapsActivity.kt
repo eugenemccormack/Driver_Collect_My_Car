@@ -71,6 +71,7 @@ import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import org.json.JSONObject
 import java.io.IOException
+import java.text.SimpleDateFormat
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle
@@ -88,6 +89,8 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, SensorEventListene
     }
 
     private var customerPhoneCall: String = ""
+    private var dropOffDistance: String = ""
+    private var dropOffTime: String = ""
 
 
     lateinit var toggle: ActionBarDrawerToggle
@@ -649,8 +652,6 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, SensorEventListene
 
 
         complete_journey_button.setOnClickListener{
-
-            Toast.makeText(this@MapsActivity, "Drop Off Complete, Thank You", Toast.LENGTH_SHORT).show()
 
             val update_trip = HashMap<String, Any>()
 
@@ -1446,6 +1447,9 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, SensorEventListene
 
                     val timeOffset = snapshot.getValue(Long::class.java)
 
+                    val estimateTime = System.currentTimeMillis()+ timeOffset!!
+                    var tripTime = SimpleDateFormat("dd/MM/yyyy HH:mm aa").format(estimateTime)
+
                     //Load User Information
 
                     FirebaseDatabase.getInstance()
@@ -1499,7 +1503,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, SensorEventListene
 
                                             val convertAddressGeoCoder = Geocoder(this@MapsActivity, Locale.getDefault())
 
-                                            var latlong = event.pickupLocationString!!.split(',');
+                                            var latlong = event.destinationLocation!!.split(',');
                                             var latitude = (latlong[0]).toDouble()
                                             var longitude = (latlong[1]).toDouble()
 
@@ -1518,7 +1522,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, SensorEventListene
                                                     cityName = addressList[0].getAddressLine(0)
 
 
-                                                tripPlanModel.originString= cityName
+                                                tripPlanModel.destinationString= cityName
 
                                             }
                                             catch (e: IOException){
@@ -1534,14 +1538,22 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, SensorEventListene
                                             tripPlanModel.driverInfoModel = Common.currentUser
                                             tripPlanModel.userModel = userModel
                                             tripPlanModel.origin = event.pickupLocation
-                                            //tripPlanModel.originString = event.pickupLocationString
+                                            tripPlanModel.originString = event.pickupLocationString
                                             tripPlanModel.destination = event.destinationLocation
-                                            tripPlanModel.destinationString = event.destinationLocationString
+                                            //tripPlanModel.destinationString = event.destinationLocationString
                                             tripPlanModel.distancePickup = distance
                                             tripPlanModel.durationPickup = duration
                                             tripPlanModel.currentLat = location.latitude
                                             tripPlanModel.currentLng = location.longitude
                                             tripPlanModel.time = formatted
+                                            tripPlanModel.tripTime = tripTime
+                                            tripPlanModel.distanceText = event.distanceText
+                                            tripPlanModel.durationText = event.durationText
+                                            tripPlanModel.distanceValue = event.distanceValue
+                                            tripPlanModel.durationValue = event.durationValue
+                                            tripPlanModel.totalPrice = event.totalPrice
+
+
                                             //tripPlanModel.collectionPhotos = collectionPhotos
                                             /*tripPlanModel.collectionPhotos = null
                                             tripPlanModel.dropOffPhotos = null*/
@@ -1568,6 +1580,9 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, SensorEventListene
                                                     txt_start_estimate_time.setText(duration)
 
                                                     customerPhoneCall = userModel!!.phone
+                                                    dropOffDistance = tripPlanModel.distanceText.toString()
+                                                    dropOffTime = tripPlanModel.durationText.toString()
+
 
                                                     setOfflineModeFroDriver(event, duration, distance)
 
@@ -1681,6 +1696,9 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, SensorEventListene
             }
 
             override fun onFinish() {
+
+                txt_start_estimate_distance.setText(dropOffDistance)
+                txt_start_estimate_time.setText(dropOffTime)
 
                 //Toast.makeText(this@MapsActivity, getString(R.string.times_up), Toast.LENGTH_LONG ).show()
 

@@ -143,6 +143,12 @@ object Common {
 
     }
 
+    val USER_TOTAL: String = "TotalUser"
+    val USER_DURATION_VALUE: String = "DurationUserValue"
+    val USER_DURATION_TEXT: String = "DurationUser"
+    val USER_DISTANCE_VALUE: String = "DistanceUserValue"
+    val USER_DISTANCE_TEXT: String = "DistanceUser"
+
     val USER_REQUEST_COMPLETE_TRIP: String = "RequestCompleteTripToUser"
     val REQUEST_DRIVER_DECLINE_AND_REMOVE_TRIP: String = "DeclineAndRemoveTrip"
     val TRIP_DESTINATION_LOCATION_REF: String = "TripDestinationLocation"

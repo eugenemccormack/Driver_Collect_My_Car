@@ -7,6 +7,11 @@ class DriverRequestReceived {
     var pickupLocationString: String? = null
     var destinationLocation: String? = null
     var destinationLocationString: String? = null
+    var distanceValue = 0
+    var durationValue = 0
+    var totalPrice = 0.0
+    var distanceText: String?=""
+    var durationText:String?=""
 
 
 

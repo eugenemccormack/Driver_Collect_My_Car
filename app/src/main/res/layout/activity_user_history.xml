@@ -170,6 +170,68 @@
             android:paddingBottom="8dp">
 
             <TextView
+                android:id="@+id/distance"
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:gravity="center"
+                android:text="Distance"
+                android:textColor="@color/dark_Blue"
+                android:textSize="20dp" />
+
+            <TextView
+                android:id="@+id/driver_distance_history"
+                android:layout_width="225dp"
+                android:layout_height="wrap_content"
+                android:background="@drawable/register_edittext"
+                android:gravity="center"
+                android:text="km"
+                android:textAlignment="center"
+                android:textColor="@color/dark_Blue"
+                android:textSize="20dp" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            android:paddingLeft="10dp"
+            android:paddingTop="8dp"
+            android:paddingBottom="8dp">
+
+            <TextView
+                android:id="@+id/duration"
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:gravity="center"
+                android:text="Duration"
+                android:textColor="@color/dark_Blue"
+                android:textSize="20dp" />
+
+            <TextView
+                android:id="@+id/driver_duration_history"
+                android:layout_width="225dp"
+                android:layout_height="wrap_content"
+                android:background="@drawable/register_edittext"
+                android:gravity="center"
+                android:text="Time"
+                android:textAlignment="center"
+                android:textColor="@color/dark_Blue"
+                android:textSize="20dp" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            android:paddingLeft="10dp"
+            android:paddingTop="8dp"
+            android:paddingBottom="8dp">
+
+            <TextView
                 android:id="@+id/complete"
                 android:layout_width="100dp"
                 android:layout_height="wrap_content"
@@ -206,7 +268,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"
                 android:gravity="center"
-                android:text="Amount"
+                android:text="Total"
                 android:textColor="@color/dark_Blue"
                 android:textSize="20dp" />
 

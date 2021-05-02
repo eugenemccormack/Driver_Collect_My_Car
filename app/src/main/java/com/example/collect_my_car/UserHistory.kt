@@ -106,6 +106,8 @@ class UserHistory: AppCompatActivity() {
         driver_date_history.text = Common.collectionInfo!!.time
         from_location_history.text = Common.collectionInfo!!.originString
         to_location_history.text = Common.collectionInfo!!.destinationString
+        driver_distance_history.text = Common.collectionInfo!!.distanceText
+        driver_duration_history.text = Common.collectionInfo!!.durationText
 
         var complete: Boolean
 
@@ -126,14 +128,17 @@ class UserHistory: AppCompatActivity() {
 
         }
 
+        val total: Double = Common.collectionInfo!!.totalPrice
 
 
-        driver_price_history.text = Common.collectionInfo!!.distanceDestination
+        val round = Math.round(total * 100.0) / 100.0
+
+        driver_price_history.text = "€"+round.toString()
 
         driver_name_history.text = Common.collectionInfo!!.userModel!!.name
         driver_email_history.text = Common.collectionInfo!!.userModel!!.email
         driver_phone_history.text = Common.collectionInfo!!.userModel!!.phone
-        driver_price_history.text = "€2.00"
+
 
 
         if (Common.collectionInfo != null && Common.collectionInfo!!.userModel!!.image != null) {
