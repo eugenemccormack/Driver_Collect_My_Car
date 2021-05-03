@@ -108,24 +108,7 @@ class HomeActivity: AppCompatActivity(), SensorEventListener {
                     Toast.makeText(applicationContext, "History Activity", Toast.LENGTH_SHORT).show()
                 }
 
-/*                R.id.mItem3 -> {
-
-                    intent = Intent(this, HomeActivity::class.java)
-
-                    startActivity(intent)
-
-                    Toast.makeText(applicationContext, "Sensor Activity", Toast.LENGTH_SHORT).show()
-                }
-
-                R.id.mItem4 -> {
-
-                    intent = Intent(this, GraphActivity::class.java)
-
-                    startActivity(intent)
-
-                    Toast.makeText(applicationContext, "Graph Activity", Toast.LENGTH_SHORT).show()
-                }*/
-                R.id.mItem5 -> {
+                R.id.mItem3 -> {
 
                     val builder = AlertDialog.Builder(this)
 

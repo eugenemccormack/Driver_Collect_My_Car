@@ -13,18 +13,8 @@
         android:title="History"
         android:icon="@drawable/ic_baseline_history_24"/>
 
-<!--    <item
+    <item
         android:id="@+id/mItem3"
-        android:title="Senor Activity"
-        android:icon="@drawable/ic_baseline_sensors_24"/>
-
-    <item
-        android:id="@+id/mItem4"
-        android:title="View Graph"
-        android:icon="@drawable/ic_baseline_bar_chart_24"/>-->
-
-    <item
-        android:id="@+id/mItem5"
         android:title="Logout"
         android:icon="@drawable/ic_baseline_exit_to_app_24"/>
 

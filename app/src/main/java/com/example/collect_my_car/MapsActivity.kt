@@ -256,11 +256,6 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, SensorEventListene
 
     private var tripNumberId: String ?= ""
 
-
-
-    private lateinit var database: FirebaseDatabase
-    private lateinit var driverInfoRef: DatabaseReference
-
     //Location
 
     private var locationRequest: LocationRequest ?= null
@@ -330,6 +325,8 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, SensorEventListene
 
         EventBus.getDefault().unregister(this)
 
+        //FirebaseAuth.getInstance().signOut()
+
         super.onDestroy()
     }
 
@@ -370,11 +367,6 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, SensorEventListene
 
                 R.id.mItem1 -> {
 
-                    intent = Intent(this, MapsActivity::class.java)
-
-                    startActivity(intent)
-
-                    Toast.makeText(applicationContext, "Maps", Toast.LENGTH_SHORT).show()
                 }
 
                 R.id.mItem2 -> {
@@ -382,29 +374,9 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, SensorEventListene
                     intent = Intent(this, History::class.java)
 
                     startActivity(intent)
-
-                    Toast.makeText(applicationContext, "History Activity", Toast.LENGTH_SHORT).show()
                 }
 
-/*                R.id.mItem3 -> {
-
-                    intent = Intent(this, HomeActivity::class.java)
-
-                    startActivity(intent)
-
-                    Toast.makeText(applicationContext, "Sensor Activity", Toast.LENGTH_SHORT).show()
-                }
-
-                R.id.mItem4 -> {
-
-                    intent = Intent(this, GraphActivity::class.java)
-
-                    startActivity(intent)
-
-                    Toast.makeText(applicationContext, "Graph Activity", Toast.LENGTH_SHORT).show()
-                }*/
-
-                R.id.mItem5 -> {
+                R.id.mItem3 -> {
 
                     val builder = AlertDialog.Builder(this)
 
@@ -414,7 +386,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, SensorEventListene
 
                         .setPositiveButton("Logout") { dialogInterface, _ ->
 
-                            FirebaseAuth.getInstance().signOut()
+                            //FirebaseAuth.getInstance().signOut()
 
                             val intent = Intent(this, LoginActivity::class.java)
                             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
@@ -1154,7 +1126,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, SensorEventListene
                     Toast.makeText(this@MapsActivity,error.message,Toast.LENGTH_SHORT).show()
             }
 
-            registerOnlineSystem()
+                        registerOnlineSystem()
         } catch (e: IOException) {
 
             Toast.makeText(this@MapsActivity, e.message, Toast.LENGTH_SHORT).show()
