@@ -1,7 +1,6 @@
 package com.example.collect_my_car.Utils
 
 import android.content.Context
-import android.util.Log
 import android.view.View
 import android.widget.FrameLayout
 import android.widget.Toast
@@ -23,7 +22,6 @@ import io.reactivex.schedulers.Schedulers
 import org.greenrobot.eventbus.EventBus
 
 object UserUtils {
-
 
     fun updateToken(context: Context, token: String) {
 
@@ -86,43 +84,27 @@ object UserUtils {
 
                                 else{
 
-
                                     Toast.makeText(context, context.getString(R.string.decline_successful), Toast.LENGTH_LONG ).show()
-
                                 }
-
-
-
 
                             },{t: Throwable? ->
 
                                 compositeDisposable.clear()
 
                                 Toast.makeText(context, t!!.message, Toast.LENGTH_LONG ).show()
-
-
-
                             }))
-
                     }
-
                     else{
 
                         compositeDisposable.clear()
                         Toast.makeText(context, context.getString(R.string.token_not_found), Toast.LENGTH_LONG ).show()
-
                     }
-
                 }
 
                 override fun onCancelled(error: DatabaseError) {
 
-                    //  Toast.makeText(mainLayout!!, error.message, Toast.LENGTH_SHORT).show()
                     Toast.makeText(context, error.message, Toast.LENGTH_LONG ).show()
-
                 }
-
-
             })
     }
 
@@ -164,45 +146,31 @@ object UserUtils {
                                     compositeDisposable.clear()
 
                                     Toast.makeText(context, context.getString(R.string.accept_failed), Toast.LENGTH_LONG ).show()
-
                                 }
-
 
                             },{t: Throwable? ->
 
                                 compositeDisposable.clear()
 
                                 Toast.makeText(context, t!!.message, Toast.LENGTH_LONG ).show()
-
-
-
                             }))
-
                     }
 
                     else{
 
                         compositeDisposable.clear()
                         Toast.makeText(context, context.getString(R.string.token_not_found), Toast.LENGTH_LONG ).show()
-
                     }
-
                 }
 
                 override fun onCancelled(error: DatabaseError) {
 
-                    //  Toast.makeText(mainLayout!!, error.message, Toast.LENGTH_SHORT).show()
                     Toast.makeText(context, error.message, Toast.LENGTH_LONG ).show()
-
                 }
-
-
             })
     }
-    //Tried view: View,rootLayout: FrameLayout?,
-    fun sendNotifyToUser(context: Context, view: android.view.View, key: String?) {
 
-        Log.d("userutils", "sendNotifyToUser")
+    fun sendNotifyToUser(context: Context, view: android.view.View, key: String?) {
 
         val compositeDisposable = CompositeDisposable()
 
@@ -216,8 +184,6 @@ object UserUtils {
                 .addListenerForSingleValueEvent(object : ValueEventListener {
                     override fun onDataChange(snapshot: DataSnapshot) {
 
-                        Log.d("userutils", "OnDataChange")
-
                         if (snapshot.exists()){
 
                             val tokenModel = snapshot.getValue(TokenModel::class.java)
@@ -229,17 +195,12 @@ object UserUtils {
                             notificationData.put(Common.DRIVER_KEY, FirebaseAuth.getInstance().currentUser!!.uid)
                             notificationData.put(Common.RIDER_KEY, key)
 
-                            Log.d("userutils", "snapshot.exists")
-
-
                             val fcmSendData = FCMSendData(tokenModel!!.token, notificationData)
 
                             compositeDisposable.add(ifcmService.sendNotification(fcmSendData)!!
                                     .subscribeOn(Schedulers.newThread())
                                     .observeOn(AndroidSchedulers.mainThread())
                                     .subscribe({ fcmResponse ->
-
-                                        Log.d("userutils", "fcmSendData")
 
                                         if(fcmResponse!!.success ==0){
 
@@ -250,8 +211,6 @@ object UserUtils {
                                         }
 
                                         else{
-
-                                            Log.d("userutils", "else EventBus")
 
                                             EventBus.getDefault().postSticky(NotifyUserEvent())
 
@@ -267,7 +226,6 @@ object UserUtils {
 
 
                                     }))
-
                         }
 
                         else{
@@ -281,14 +239,10 @@ object UserUtils {
 
                     override fun onCancelled(error: DatabaseError) {
 
-                        //  Toast.makeText(mainLayout!!, error.message, Toast.LENGTH_SHORT).show()
                         Toast.makeText(context, error.message, Toast.LENGTH_LONG ).show()
 
                     }
-
-
                 })
-
     }
 
     fun sendDeclineRemoveTripRequest(context: Context, rootLayout: FrameLayout?, key: String, tripNumberId: String?) {

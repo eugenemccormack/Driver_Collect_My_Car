@@ -60,12 +60,6 @@ object  LocationUtils {
         }catch (e:IOException){
 
             result.toString()
-
         }
-
-
-
     }
-
-
 }

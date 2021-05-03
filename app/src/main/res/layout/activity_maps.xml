@@ -4,8 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/drawerLayoutMaps"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".NavigationDrawerDriver">
+    android:layout_height="match_parent">
 
     <FrameLayout
         android:id="@+id/root_layout"

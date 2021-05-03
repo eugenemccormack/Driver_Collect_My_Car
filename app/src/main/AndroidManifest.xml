@@ -26,13 +26,14 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
 
-        <activity android:name=".NavigationDrawerDriver"></activity>
-        <activity android:name=".GraphActivity"></activity>
+
         <activity android:name=".CameraActivity"
             android:screenOrientation="portrait"/>
 
-        <activity android:name=".ViewCollectionPhotos" />
-        <activity android:name=".ViewDropOffPhotos" />
+        <activity android:name=".ViewCollectionPhotos"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".ViewDropOffPhotos"
+            android:screenOrientation="portrait"/>
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
              (See the file "res/values/google_maps_api.xml").
@@ -57,8 +58,10 @@
 
         <activity
             android:name=".MapsActivity"
-            android:label="@string/title_activity_maps" />
+            android:label="@string/title_activity_maps"
+            android:screenOrientation="portrait"/>
         <activity android:name=".LoginActivity"
+            android:screenOrientation="portrait"
             android:label="Driver">
 
             <intent-filter>
@@ -76,11 +79,14 @@
         </service>
 
         <activity android:name=".Register"
-            android:label="Register"/>
-        <activity android:name=".HomeActivity" />
+            android:label="Register"
+            android:screenOrientation="portrait"/>
+
         <activity
-            android:name=".UserHistory"/>
-        <activity android:name=".History" />
+            android:name=".UserHistory"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".History"
+            android:screenOrientation="portrait"/>
     </application>
 
 </manifest>

@@ -8,8 +8,6 @@
     android:orientation="vertical"
     tools:context=".CameraActivity">
 
-
-
     <ImageView
         android:id="@+id/imageView"
         android:layout_width="match_parent"

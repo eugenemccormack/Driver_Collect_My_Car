@@ -3,7 +3,6 @@ package com.example.collect_my_car
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.widget.ImageView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -16,12 +15,6 @@ import kotlinx.android.synthetic.main.activity_user_history.*
 import java.util.*
 
 class UserHistory: AppCompatActivity() {
-
-    companion object {
-
-        val MESSGAE = "Message"
-    }
-
 
     private lateinit var database: FirebaseDatabase
     private lateinit var trip: DatabaseReference
@@ -38,48 +31,22 @@ class UserHistory: AppCompatActivity() {
 
     private fun getCollectionFromFirebase() {
 
-        Log.d("ViewCollection", "getUserFromFirebase")
-
         var collection_id = intent.getStringExtra(History.MESSGAE)
 
         database = FirebaseDatabase.getInstance()
         trip = database.getReference(Common.TRIP)
         firebaseAuth = FirebaseAuth.getInstance()
 
-        Log.d("ViewCollection", trip.toString())
-
         if (collection_id != null) {
-
-            Log.d("ViewCollection", "driverKey != null")
 
             trip.child(collection_id)
                     .addListenerForSingleValueEvent(object : ValueEventListener {
 
                         override fun onDataChange(p0: DataSnapshot) {
 
-                            Log.d("ViewCollection", trip.child(collection_id).toString())
-
-                            Log.d("ViewCollection", "onDataChange")
-
-                            //  if(p0.exists()){
-
-                            Log.d("ViewCollection", "p0.exists")
-
                             val model = p0.getValue(TripPlanModel::class.java)
 
                             loadCollectionInfo(model)
-
-                            //Common.selectedDriver = model
-
-
-                            Log.d("ViewCollection", model.toString())
-
-                            /*  val driverTestString = ""
-
-                              driverTest.text = model.toString()*/
-
-                            // }
-
                         }
 
                         override fun onCancelled(p0: DatabaseError) {
@@ -87,11 +54,8 @@ class UserHistory: AppCompatActivity() {
                             Toast.makeText(this@UserHistory, p0.message, Toast.LENGTH_SHORT).show()
 
                         }
-
-
                     })
         }
-
     }
 
     private fun loadCollectionInfo(model: TripPlanModel?) {
@@ -113,18 +77,13 @@ class UserHistory: AppCompatActivity() {
 
         complete = Common.collectionInfo!!.done
 
-
-
         if (complete) {
 
             driver_complete_history.text = "Complete"
 
-            Log.d("UserHistory", "isDone True : " + Common.collectionInfo!!.done.toString())
         } else {
 
             driver_complete_history.text = "In Progress"
-
-            Log.d("UserHistory", "isDone False : " + Common.collectionInfo!!.done.toString())
 
         }
 
@@ -144,7 +103,6 @@ class UserHistory: AppCompatActivity() {
         driver_name_history.text = Common.collectionInfo!!.userModel!!.name
         driver_email_history.text = Common.collectionInfo!!.userModel!!.email
         driver_phone_history.text = Common.collectionInfo!!.userModel!!.phone
-
 
 
         if (Common.collectionInfo != null && Common.collectionInfo!!.userModel!!.image != null) {
@@ -176,7 +134,5 @@ class UserHistory: AppCompatActivity() {
             startActivity(intent)
 
         }
-
-
     }
 }

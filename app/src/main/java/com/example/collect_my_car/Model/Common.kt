@@ -9,7 +9,6 @@ import android.content.Intent
 import android.graphics.BitmapFactory
 import android.graphics.Color
 import android.os.Build
-import android.util.Log
 import androidx.core.app.NotificationCompat
 import com.example.collect_my_car.R
 import com.google.android.gms.maps.model.LatLng
@@ -31,20 +30,9 @@ object Common {
 
         var pendingIntent: PendingIntent? = null
 
-       // Log.d("TOKEN", "Before IF context showNotification  $pendingIntent")
-
-        Log.d("TOKEN", "Before IF context showNotification  $context")
-        Log.d("TOKEN", "Before IF id showNotification  $id")
-        Log.d("TOKEN", "Before IF title showNotification  $title")
-        Log.d("TOKEN", "Before IF body showNotification  $body")
-        Log.d("TOKEN", "Before IF intent showNotification  $intent")
-
         if(intent != null)
 
           pendingIntent = PendingIntent.getActivity(context, id, intent!!, PendingIntent.FLAG_UPDATE_CURRENT)
-
-
-        Log.d("TOKEN", "If intent showNotification  $intent")
 
             val NOTIFICATION_CHANNEL_ID = "collectmycar-c2834"
 
@@ -73,10 +61,6 @@ object Common {
                     .setSmallIcon(R.drawable.ic_baseline_directions_car_24)
                     .setLargeIcon(BitmapFactory.decodeResource(context.resources, R.drawable.ic_baseline_directions_car_24))
 
-            Log.d("TOKEN", "Notification  " + builder)
-
-
-
             if(pendingIntent != null)
 
                 builder.setContentIntent(pendingIntent!!)
@@ -84,13 +68,6 @@ object Common {
                 val notification = builder.build()
 
                 notificationManager.notify(id, notification)
-
-                Log.d("TOKEN", "Notification 2   $notification")
-
-
-
-
-
     }
 
     //Decode Poly

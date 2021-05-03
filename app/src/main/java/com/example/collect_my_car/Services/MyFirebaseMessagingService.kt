@@ -1,6 +1,5 @@
 package com.example.collect_my_car.Services
 
-import android.util.Log
 import com.example.collect_my_car.Model.Common
 import com.example.collect_my_car.Model.EventBus.DriverRequestReceived
 import com.example.collect_my_car.Utils.UserUtils
@@ -19,7 +18,6 @@ class MyFirebaseMessagingService: FirebaseMessagingService() {
         if(FirebaseAuth.getInstance().currentUser != null){
 
             UserUtils.updateToken(this,token)
-
         }
     }
 
@@ -46,10 +44,7 @@ class MyFirebaseMessagingService: FirebaseMessagingService() {
                 driverRequestReceived.durationText = data[Common.USER_DURATION_TEXT]!!.toString()
                 driverRequestReceived.estimatedPrice = data[Common.USER_TOTAL]!!.toDouble()
 
-
-
                 EventBus.getDefault().postSticky(driverRequestReceived)
-
             }
             else {
 
@@ -57,17 +52,7 @@ class MyFirebaseMessagingService: FirebaseMessagingService() {
                         data[Common.NOTI_TITLE],
                         data[Common.NOTI_BODY],
                         null)
-
-                Log.d("TOKEN", "onMessageReceived " + Common.showNotification(this, Random.nextInt(),
-                        data[Common.NOTI_TITLE],
-                        data[Common.NOTI_BODY],
-                        null).toString())
-
-                Log.d("TOKEN", "onMessageReceived 2 " + data[Common.NOTI_TITLE] + " " + data[Common.NOTI_BODY])
-
             }
-
         }
     }
-
 }

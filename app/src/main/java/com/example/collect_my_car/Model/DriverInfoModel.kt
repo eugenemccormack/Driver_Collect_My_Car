@@ -11,8 +11,6 @@ class DriverInfoModel {
      var county:String? = null
      var rating = 1
 
-     //var photos:String= ""
-
      var licenceSurname:String? = null
      var licenceFirstName:String? = null
      var licenceBOD = 0

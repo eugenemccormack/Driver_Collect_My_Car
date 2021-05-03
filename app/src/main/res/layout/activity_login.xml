@@ -7,86 +7,6 @@
     android:background="@color/white"
     tools:context=".LoginActivity">
 
-<!--    <TextView
-        android:id="@+id/textView2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="35dp"
-        android:text="Hello"
-        app:layout_constraintEnd_toEndOf="@+id/not_signed_up"
-        app:layout_constraintHorizontal_bias="0.50"
-        app:layout_constraintStart_toStartOf="@+id/not_signed_up"
-        app:layout_constraintTop_toBottomOf="@+id/not_signed_up" />-->
-
-<!--    <TextView
-        android:id="@+id/login_textView_login"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Login"
-        android:textSize="30dp"
-        android:textColor="@color/black"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.046" />-->
-
-<!--   <EditText
-        android:id="@+id/email_editText_login"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="90dp"
-        android:background="@drawable/register_edittext"
-        android:ems="10"
-        android:hint="Email"
-        android:inputType="textEmailAddress"
-        android:paddingLeft="20dp"
-        android:textColor="@color/black"
-        android:textColorHint="@color/black"
-        app:layout_constraintEnd_toEndOf="@+id/login_textView_login"
-        app:layout_constraintStart_toStartOf="@+id/login_textView_login"
-        app:layout_constraintTop_toBottomOf="@+id/login_textView_login" />-->
-
-<!--    <EditText
-        android:id="@+id/password_editText_login"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="30dp"
-        android:background="@drawable/register_edittext"
-        android:ems="10"
-        android:hint="Password"
-        android:inputType="textPassword"
-        android:paddingLeft="20dp"
-        android:textColor="@color/black"
-        android:textColorHint="@color/black"
-        app:layout_constraintEnd_toEndOf="@+id/email_editText_login"
-        app:layout_constraintStart_toStartOf="@+id/email_editText_login"
-        app:layout_constraintTop_toBottomOf="@+id/email_editText_login" />-->
-
-  <!--  <Button
-        android:id="@+id/login_button_login"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="125dp"
-        android:text="Login"
-        app:layout_constraintEnd_toEndOf="@+id/password_editText_login"
-        app:layout_constraintStart_toStartOf="@+id/password_editText_login"
-        app:layout_constraintTop_toBottomOf="@+id/password_editText_login" />-->
-
-<!--    <TextView
-        android:id="@+id/not_signed_up"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="35dp"
-        android:text="Not Signed Up?"
-        android:textColor="@color/black"
-        app:layout_constraintEnd_toEndOf="@+id/login_button_login"
-        app:layout_constraintStart_toStartOf="@+id/login_button_login"
-        app:layout_constraintTop_toBottomOf="@+id/login_button_login" />-->
-
-
     <TextView
         android:id="@+id/login_textView_login2"
         android:layout_width="wrap_content"
@@ -223,4 +143,5 @@
         app:layout_constraintStart_toStartOf="@+id/email_editText_login"
         app:layout_constraintTop_toTopOf="@+id/password_textView_register"
         app:layout_constraintVertical_bias="0.0" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
