@@ -9,7 +9,7 @@ class DriverRequestReceived {
     var destinationLocationString: String? = null
     var distanceValue = 0
     var durationValue = 0
-    var totalPrice = 0.0
+    var estimatedPrice = 0.0
     var distanceText: String?=""
     var durationText:String?=""
 

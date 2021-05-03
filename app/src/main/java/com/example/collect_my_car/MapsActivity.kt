@@ -50,6 +50,7 @@ import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.*
 import com.google.android.material.chip.Chip
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.database.*
 import com.karumi.dexter.Dexter
 import com.karumi.dexter.PermissionToken
@@ -78,7 +79,6 @@ import java.time.format.FormatStyle
 import java.util.*
 import java.util.concurrent.TimeUnit
 import kotlin.collections.HashMap
-import kotlin.math.absoluteValue
 
 class MapsActivity : AppCompatActivity(), OnMapReadyCallback, SensorEventListener {
 
@@ -91,6 +91,15 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, SensorEventListene
     private var customerPhoneCall: String = ""
     private var dropOffDistance: String = ""
     private var dropOffTime: String = ""
+
+    var brakingCount = 0
+    var newRating = 0
+    var discountRating = 0.0
+    var updatePrice = 0.0
+    var round: Double = 0.0
+
+    private var mAuth: FirebaseAuth? = null
+    private var mUser: FirebaseUser? = null
 
 
     lateinit var toggle: ActionBarDrawerToggle
@@ -639,11 +648,13 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, SensorEventListene
 
             startActivity(intent)
 
-            complete_Pictures.visibility = View.GONE
+            calculateDiscountRating()
+
+/*            complete_Pictures.visibility = View.GONE
 
             complete_journey_button.visibility = View.VISIBLE
 
-            complete_journey_button.isEnabled = true
+            complete_journey_button.isEnabled = true*/
 
 
 
@@ -677,6 +688,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, SensorEventListene
 
                                     tripNumberId = ""
                                     isTripStart = false
+                                    brakingCount = 0
 
                                     chip_decline.visibility = View.GONE
                                     layout_accept.visibility = View.GONE
@@ -703,15 +715,8 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, SensorEventListene
 
                                     makeDriverOnline(location)
 
-
-
                                 }
-
-
                     }
-
-
-
         }
 
         image_phone.setOnClickListener {
@@ -723,6 +728,126 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, SensorEventListene
         }
 
     }
+
+    private fun calculateDiscountRating() {
+
+
+        FirebaseDatabase.getInstance()
+                .getReference(Common.TRIP)
+                .child(tripNumberId!!)
+                .addListenerForSingleValueEvent(object : ValueEventListener {
+                    override fun onDataChange(snapshot: DataSnapshot) {
+
+                        val values = snapshot.getValue(TripPlanModel::class.java)
+
+                        when (newRating) {
+                            5 -> {
+
+                                discountRating = 0.0
+
+                                Log.d("Discount", "No Discount" + discountRating)
+
+
+                            }
+                            4 -> {
+
+                                discountRating = (values!!.estimatedPrice * 20 / 100)
+
+                                Log.d("Discount", "20% " + discountRating)
+
+
+                            }
+                            3 -> {
+
+                                discountRating = (values!!.estimatedPrice * 30 / 100)
+
+                                Log.d("Discount", "30% " + discountRating)
+
+                            }
+                            2 -> {
+
+                                discountRating = (values!!.estimatedPrice * 40 / 100)
+
+                                Log.d("Discount", "40% " + discountRating)
+
+                            }
+                            1 -> {
+
+                                discountRating = (values!!.estimatedPrice * 50 / 100)
+
+                                Log.d("Discount", "50% " + discountRating)
+
+                            }
+
+
+                        }
+
+                        updatePrice = (values!!.estimatedPrice - discountRating)
+
+                        val updatePriceRound: Double = updatePrice
+
+                        round += Math.round(updatePriceRound * 100.0) / 100.0
+
+                        updatePrice(round)
+
+
+
+                        Log.d("Discount", "updatePrice " + updatePrice)
+
+                        Log.d("Discount", "ROUNDED " + round.toString())
+
+
+                    }
+
+                    override fun onCancelled(error: DatabaseError) {
+
+                    }
+
+/*    private fun UpdatePrice(round: Double) {
+
+        Log.d("Discount", "Outside UpdatePrice FUNCTION " + round)
+        Log.d("Discount",  "tripNumberId" + tripNumberId)
+*//*        val updateDiscount = HashMap<String, Any>()
+
+
+
+        updateDiscount.put("discountPrice", round)*//*
+        FirebaseDatabase.getInstance()
+                .getReference(Common.TRIP)
+                .child(tripNumberId!!)
+                .child("newPrice")
+                .setValue(round)
+
+                //.updateChildren(updateDiscount)
+
+
+    }*/
+                })
+    }
+
+    private fun updatePrice(round: Double) {
+
+        val updatePrice = HashMap<String, Any>()
+
+        updatePrice["totalPrice"] = round
+
+        FirebaseDatabase.getInstance().getReference(Common.TRIP)
+                .child(tripNumberId!!)
+                .updateChildren(updatePrice)
+                .addOnFailureListener { e ->  Toast.makeText(this@MapsActivity, e.message, Toast.LENGTH_SHORT).show()
+                }.addOnSuccessListener {
+
+                    Log.d("Discount", "UPDATE PRICE : $round")
+
+                    complete_Pictures.visibility = View.GONE
+
+                    complete_journey_button.visibility = View.VISIBLE
+
+                    complete_journey_button.isEnabled = true
+
+                }
+    }
+
 
     private fun drawPathFromCurrentLocation(destinationLocation: String?) {
 
@@ -1165,7 +1290,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, SensorEventListene
             oldTime = currentTime
             var speed= Math.abs(x+y+z-xold-yold-zold)/timeDiff*10000
 
-            if(speed > threadShould){
+/*            if(speed > threadShould){
 
                // var v=getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
                // v.vibrate(500)
@@ -1173,13 +1298,17 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, SensorEventListene
 
             }
 
-            else if (z > 14.0){//10.0){ //previously x they y
+            else */if (z > 14.0){//10.0){ //previously x they y
+
+                //var brakingCount: Int = 0
 
                 var v=getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
-                //v.vibrate(500)
+                v.vibrate(500)
                 //Toast.makeText(this, "Braking Hard -" + x.absoluteValue , Toast.LENGTH_LONG).show()
 
                 val braking = Save(z) //x
+
+               // val brakingRound: Float = String.format("%.2f", braking).toFloat()
 
              FirebaseDatabase.getInstance()
                     .getReference(Common.TRIP)
@@ -1188,21 +1317,101 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, SensorEventListene
                     .addOnFailureListener { e ->  Toast.makeText(this@MapsActivity, e.message, Toast.LENGTH_SHORT).show()
                     }.addOnSuccessListener {
 
-                         complete_Pictures.visibility = View.GONE
+                         Toast.makeText(this, "Hard Braking Detected: " + z,  Toast.LENGTH_LONG).show() //+ z.absoluteValue
 
-                         hard_braking.visibility = View.VISIBLE
+                         ++brakingCount
+
+                         when {
+                             brakingCount <3 -> {
+
+                                 newRating = 5
+
+                             }
+                             brakingCount in 3..6 -> {
+
+                                 newRating = 4
+
+                             }
+                             brakingCount in 7..9 -> {
+
+                                 newRating = 3
+
+                             }
+                             brakingCount in 10..12 -> {
+
+                                 newRating = 2
+
+                             }
+                             brakingCount > 12 -> {
+
+                                 newRating = 1
+
+                             }
+                         }
+
+                         mAuth = FirebaseAuth.getInstance()
+
+                         mUser = mAuth!!.currentUser
+                         val userID = mUser!!.uid
+
+                         //FirebaseAuth.getInstance().currentUser!!.uid
+
+                         val update_rating = HashMap<String, Any>()
+
+                         update_rating.put("rating", newRating)
+                         FirebaseDatabase.getInstance()
+                                 .getReference(Common.DRIVER_INFO_REFERENCE)
+                                 .child(userID)
+                                 .updateChildren(update_rating)
+                                 .addOnFailureListener { e ->  Toast.makeText(this@MapsActivity, e.message, Toast.LENGTH_SHORT).show()
+                                 }.addOnSuccessListener {
+
+                                     Log.d("Sensor", "Rating : $newRating")
+
+                                }
+
+                         val update_data = HashMap<String, Any>()
+
+                         update_data["brakingCount"] = brakingCount
+                         update_data["newDriverRating"] = newRating
+
+                         FirebaseDatabase.getInstance().getReference(Common.TRIP)
+                                 .child(tripNumberId!!)
+                                 .updateChildren(update_data)
+                                 .addOnFailureListener { e ->  Toast.makeText(this@MapsActivity, e.message, Toast.LENGTH_SHORT).show()
+                                 }.addOnSuccessListener {
+
+                                     Log.d("Sensor", "Braking Count : $brakingCount")
+                                     Log.d("Sensor", "New Driver Rating : $newRating")
 
 
-         /*                 Handler(Looper.getMainLooper()).postDelayed({
+                                 }
 
-                              }, 3000)*/
+/*                         FirebaseDatabase.getInstance()
+                                 .getReference(Common.TRIP)
+                                 .child(tripNumberId!!).child("brakingCount").setValue(brakingCount)
+                                 .addOnFailureListener { e ->  Toast.makeText(this@MapsActivity, e.message, Toast.LENGTH_SHORT).show()
+                                 }.addOnSuccessListener {
 
-                         hard_braking.visibility = View.GONE
-                         complete_Pictures.visibility = View.VISIBLE
+                                     Log.d("Sensor", "Braking Count : $brakingCount")
 
-                         Toast.makeText(this, "Hard Braking Detected - " + z.absoluteValue , Toast.LENGTH_LONG).show()
 
-                    }
+                                 }*/
+/*
+                         val update_newDriverRating = HashMap<String, Any>()
+
+                         FirebaseDatabase.getInstance()
+                                 .getReference(Common.TRIP)
+                                 .child(tripNumberId!!)
+                                 .updateChildren(update_newDriverRating)
+                                 .addOnFailureListener { e ->  Toast.makeText(this@MapsActivity, e.message, Toast.LENGTH_SHORT).show()
+                                 }.addOnSuccessListener {
+
+                                     Log.d("Sensor", "New Driver Rating : $newRating")
+
+                                 }*/
+
+                     }
 
 /*                val uid = FirebaseAuth.getInstance().uid ?: ""
                 val ref = FirebaseDatabase.getInstance().getReference("/DriverInfo/mapSensor/$uid").push()
@@ -1551,7 +1760,9 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, SensorEventListene
                                             tripPlanModel.durationText = event.durationText
                                             tripPlanModel.distanceValue = event.distanceValue
                                             tripPlanModel.durationValue = event.durationValue
-                                            tripPlanModel.totalPrice = event.totalPrice
+                                            tripPlanModel.estimatedPrice = event.estimatedPrice
+                                            tripPlanModel.oldDriverRating = Common.currentUser!!.rating
+
 
 
                                             //tripPlanModel.collectionPhotos = collectionPhotos
@@ -1580,8 +1791,8 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, SensorEventListene
                                                     txt_start_estimate_time.setText(duration)
 
                                                     customerPhoneCall = userModel!!.phone
-                                                    dropOffDistance = tripPlanModel.distanceText.toString()
-                                                    dropOffTime = tripPlanModel.durationText.toString()
+                                                    dropOffDistance = tripPlanModel.distanceText!!.toString()
+                                                    dropOffTime = tripPlanModel.durationText!!.toString()
 
 
                                                     setOfflineModeFroDriver(event, duration, distance)

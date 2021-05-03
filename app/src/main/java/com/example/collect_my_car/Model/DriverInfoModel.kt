@@ -9,7 +9,7 @@ class DriverInfoModel {
      var address1:String? = null
      var address2:String? = null
      var county:String? = null
-     var rating = 0
+     var rating = 1
 
      //var photos:String= ""
 

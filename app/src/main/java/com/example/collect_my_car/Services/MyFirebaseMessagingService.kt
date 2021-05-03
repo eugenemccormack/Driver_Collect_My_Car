@@ -44,7 +44,7 @@ class MyFirebaseMessagingService: FirebaseMessagingService() {
                 driverRequestReceived.distanceText = data[Common.USER_DISTANCE_TEXT]!!.toString()
                 driverRequestReceived.durationValue = data[Common.USER_DURATION_VALUE]!!.toInt()
                 driverRequestReceived.durationText = data[Common.USER_DURATION_TEXT]!!.toString()
-                driverRequestReceived.totalPrice = data[Common.USER_TOTAL]!!.toDouble()
+                driverRequestReceived.estimatedPrice = data[Common.USER_TOTAL]!!.toDouble()
 
 
 

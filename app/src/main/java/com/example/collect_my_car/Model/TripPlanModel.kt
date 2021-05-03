@@ -44,7 +44,17 @@ class TripPlanModel {
 
     var durationValue = 0
 
+    var estimatedPrice = 0.0
+
+    //var discountPrice = 0.0
+
     var totalPrice = 0.0
+
+    var brakingCount = 0
+
+    var newDriverRating = 5
+
+    var oldDriverRating = 1
 
     var distanceText: String?=""
 

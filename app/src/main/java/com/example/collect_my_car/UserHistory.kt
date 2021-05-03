@@ -128,12 +128,18 @@ class UserHistory: AppCompatActivity() {
 
         }
 
-        val total: Double = Common.collectionInfo!!.totalPrice
+        driver_braking_count_history.text = Common.collectionInfo!!.brakingCount.toString()  + " times"
+        driver_old_rating_history.text = Common.collectionInfo!!.driverInfoModel!!.rating.toString()
+        driver_current_rating_history.text = Common.collectionInfo!!.newDriverRating.toString()
 
+
+        val total: Double = Common.collectionInfo!!.estimatedPrice
 
         val round = Math.round(total * 100.0) / 100.0
 
-        driver_price_history.text = "€"+round.toString()
+        driver_estimated_total_history.text = "€"+round.toString()
+
+        driver_price_history.text = "€"+Common.collectionInfo!!.totalPrice!!.toString()
 
         driver_name_history.text = Common.collectionInfo!!.userModel!!.name
         driver_email_history.text = Common.collectionInfo!!.userModel!!.email
