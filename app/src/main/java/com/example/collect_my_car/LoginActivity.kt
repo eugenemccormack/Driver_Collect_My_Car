@@ -1,9 +1,7 @@
 package com.example.collect_my_car
 
-import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.collect_my_car.Model.Common
@@ -15,11 +13,6 @@ import com.google.firebase.messaging.FirebaseMessaging
 import kotlinx.android.synthetic.main.activity_login.*
 
 class LoginActivity: AppCompatActivity(){
-
-    companion object{
-
-        val MESSGAE = "Message"
-    }
 
     private lateinit var database : FirebaseDatabase
     private lateinit var driverInfoRef : DatabaseReference
@@ -39,30 +32,17 @@ class LoginActivity: AppCompatActivity(){
 
         not_signed_up.setOnClickListener {
 
-            Log.d("`Login Activity`", "Show Register Activity")
-
             val intent = Intent(this, Register::class.java)
 
             startActivity(intent)
-
         }
-
-
     }
 
-    override fun onStop() {
 
-        //if(firebaseAuth != null && listener != null) firebaseAuth.removeAuthStateListener(listener)
-        super.onStop()
-    }
-
-    @SuppressLint("StringFormatInvalid")
     private fun signIn(){
 
-        val email = email_editText_login.text.toString()
-        val password = password_editText_login.text.toString()
-
-        Log.d("Login", "Attempt Login with Email / Password : $email/***")
+        val email = email_editText_login.text.toString().trim()
+        val password = password_editText_login.text.toString().trim()
 
         if(email.isEmpty()){
 
@@ -77,7 +57,6 @@ class LoginActivity: AppCompatActivity(){
             Toast.makeText(this, "ERROR - Please Enter a Password", Toast.LENGTH_SHORT).show()
 
             return
-
         }
 
 
@@ -87,74 +66,39 @@ class LoginActivity: AppCompatActivity(){
 
                 if(!it.isSuccessful) return@addOnCompleteListener
 
-                Log.d("Main", "Successfully Signed in with User with UID: ${it.result?.user!!.uid}")
-
-
                 firebaseAuth.addAuthStateListener(listener)
-
-                //getUserFromFirebase()
 
             }
 
             .addOnFailureListener{
 
-                Log.d("Main", "ERROR - Failed to Sign in with User : ${it.message}")
-
                 Toast.makeText(this, "ERROR - Failed to Sign in with User : ${it.message}", Toast.LENGTH_SHORT).show()
-
             }
-
-
 
 
         firebaseAuth = FirebaseAuth.getInstance()
         listener = FirebaseAuth.AuthStateListener { myFirebaseAuth ->
 
-        val user = myFirebaseAuth.currentUser
+            val user = myFirebaseAuth.currentUser
 
-        if(user != null){
+            if(user != null){
 
-            FirebaseMessaging.getInstance().token
-                .addOnFailureListener { e->
-
-
-                    Toast.makeText(this, e.message, Toast.LENGTH_SHORT).show()
-
-                }
-
-                .addOnSuccessListener { token ->
+                FirebaseMessaging.getInstance().token
+                        .addOnFailureListener { e->
 
 
-                    Log.d("TOKEN", token)
-                    UserUtils.updateToken(this@LoginActivity, token)
+                            Toast.makeText(this, e.message, Toast.LENGTH_SHORT).show()
 
+                        }
 
+                        .addOnSuccessListener { token ->
 
-                }
+                            UserUtils.updateToken(this@LoginActivity, token)
+                        }
 
-
-            getUserFromFirebase()
-
-        }
-
-        }
-
-/*        FirebaseMessaging.getInstance().token.addOnCompleteListener(OnCompleteListener { task ->
-            if (!task.isSuccessful) {
-                Log.d("TOKEN2", "Fetching FCM registration token failed", task.exception)
-                return@OnCompleteListener
+                getUserFromFirebase()
             }
-
-            // Get new FCM registration token
-            val token = task.result
-
-            Log.d("TOKEN2", token)
-
-            // Log and toast
-            val msg = getString(R.string.msg_token_fmt, token)
-            Log.d("TOKEN2", msg)
-            Toast.makeText(baseContext, msg, Toast.LENGTH_SHORT).show()
-        })*/
+        }
     }
 
 
@@ -174,20 +118,14 @@ class LoginActivity: AppCompatActivity(){
                             val model = p0.getValue(DriverInfoModel::class.java)
 
                             goToMapsActivity(model)
-
                         }
-
                     }
 
                     override fun onCancelled(p0: DatabaseError) {
 
                         Toast.makeText(this@LoginActivity, p0.message, Toast.LENGTH_SHORT).show()
-
                     }
-
-
                 })
-
     }
 
     private fun goToMapsActivity(model: DriverInfoModel?) {
@@ -196,15 +134,8 @@ class LoginActivity: AppCompatActivity(){
 
         val intent = Intent(this, MapsActivity::class.java)
 
-        //intent.putExtra(MESSGAE, email)
-
         startActivity(intent)
 
         finish()
-
-
-
     }
-
-
 }

@@ -113,12 +113,8 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, SensorEventListene
     var xold = 0.0
     var yold = 0.0
     var zold = 0.0
-
-    var threadShould = 3000.0
-
     var oldTime:Long = 0
 
-    //Routes
 
     private val compositeDisposable = CompositeDisposable()
 
@@ -129,8 +125,6 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, SensorEventListene
     private var polylineOptions: PolylineOptions?= null
     private var blackPolylineOptions: PolylineOptions?= null
     private var polylineList: ArrayList<LatLng?>?= null
-
-    //Views
 
     private lateinit var chip_decline: Chip
     private lateinit var layout_accept: CardView
@@ -163,8 +157,6 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, SensorEventListene
     private val pickupGeoQueryListener = object : GeoQueryEventListener{
         override fun onKeyEntered(key: String?, location: GeoLocation?) {
 
-            Log.d("MapActivity", "onKeyEntered")
-
             take_Pictures.isEnabled = true
 
 
@@ -173,48 +165,34 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, SensorEventListene
 
             if(pickupGeoQuery != null){
 
-                //Remove
                 pickupGeoFire!!.removeLocation(key)
                 pickupGeoFire = null
                 pickupGeoQuery!!.removeAllListeners()
 
             }
-
         }
 
         override fun onKeyExited(key: String?) {
 
                 take_Pictures.isEnabled = false
-
-
-
         }
 
         override fun onKeyMoved(key: String?, location: GeoLocation?) {
-
-
 
         }
 
         override fun onGeoQueryReady() {
 
-
-
         }
 
         override fun onGeoQueryError(error: DatabaseError?) {
 
-
-
         }
-
 
     }
 
     private val destinationGeoQueryListener = object : GeoQueryEventListener{
         override fun onKeyEntered(key: String?, location: GeoLocation?) {
-
-            Toast.makeText(this@MapsActivity, "Destination Entered", Toast.LENGTH_SHORT).show()
 
             complete_Pictures.isEnabled = true
 
@@ -226,7 +204,6 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, SensorEventListene
                 destinationGeoQuery!!.removeAllListeners()
 
             }
-
         }
 
         override fun onKeyExited(key: String?) {
@@ -255,21 +232,14 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, SensorEventListene
 
     private var tripNumberId: String ?= ""
 
-    //Location
-
     private var locationRequest: LocationRequest ?= null
     private var locationCallback: LocationCallback ?= null
     private var fusedLocationProviderClient: FusedLocationProviderClient ?= null
-
-
-    //Online System
 
     private lateinit var onlineRef: DatabaseReference
     private var currentUserRef: DatabaseReference? = null
     private lateinit var driversLocationRef: DatabaseReference
     private lateinit var geofire: GeoFire
-
-    //Decline Collection
 
     private var driverRequestReceived : DriverRequestReceived ?= null
     private var countDownEvent : Disposable ?= null
@@ -298,10 +268,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, SensorEventListene
         if (!EventBus.getDefault().isRegistered(this))
 
         EventBus.getDefault().register(this)
-
-
     }
-
 
     override fun onDestroy() {
 
@@ -323,8 +290,6 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, SensorEventListene
             EventBus.getDefault().removeStickyEvent(NotifyUserEvent::class.java)
 
         EventBus.getDefault().unregister(this)
-
-        //FirebaseAuth.getInstance().signOut()
 
         super.onDestroy()
     }
@@ -430,7 +395,6 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, SensorEventListene
 
         init()
 
-        // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         val mapFragment = supportFragmentManager
                 .findFragmentById(R.id.map) as SupportMapFragment
         mapFragment.getMapAsync(this)
@@ -586,20 +550,33 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, SensorEventListene
                         .title(driverRequestReceived!!.destinationLocationString)
                         .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED)))
 
-                //Draw Path to Destination
-
                 drawPathFromCurrentLocation(driverRequestReceived!!.destinationLocation)
 
             }
+
+            mAuth = FirebaseAuth.getInstance()
+
+            mUser = mAuth!!.currentUser
+            val userID = mUser!!.uid
+
+            val update_rating = HashMap<String, Any>()
+
+            update_rating.put("rating", 5)
+            FirebaseDatabase.getInstance()
+                    .getReference(Common.DRIVER_INFO_REFERENCE)
+                    .child(userID)
+                    .updateChildren(update_rating)
+                    .addOnFailureListener { e ->  Toast.makeText(this@MapsActivity, e.message, Toast.LENGTH_SHORT).show()
+                    }.addOnSuccessListener {
+
+
+                    }
 
             startAccelerometer()
 
             start_journey_button.visibility = View.GONE
             chip_decline.visibility = View.GONE
-           //Before Complete Photos Added// complete_journey_button.visibility = View.VISIBLE
             complete_Pictures.visibility = View.VISIBLE
-            //complete_Pictures.setBackgroundResource(R.color.dark_Blue)
-            //complete_Pictures.setTextColor(getColor(R.color.white))
 
 
 
@@ -620,14 +597,6 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, SensorEventListene
             startActivity(intent)
 
             calculateDiscountRating()
-
-/*            complete_Pictures.visibility = View.GONE
-
-            complete_journey_button.visibility = View.VISIBLE
-
-            complete_journey_button.isEnabled = true*/
-
-
 
         }
 
@@ -702,6 +671,8 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, SensorEventListene
 
     private fun calculateDiscountRating() {
 
+        round = 0.0
+
 
         FirebaseDatabase.getInstance()
                 .getReference(Common.TRIP)
@@ -716,41 +687,27 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, SensorEventListene
 
                                 discountRating = 0.0
 
-                                Log.d("Discount", "No Discount" + discountRating)
-
-
                             }
                             4 -> {
 
                                 discountRating = (values!!.estimatedPrice * 20 / 100)
-
-                                Log.d("Discount", "20% " + discountRating)
-
 
                             }
                             3 -> {
 
                                 discountRating = (values!!.estimatedPrice * 30 / 100)
 
-                                Log.d("Discount", "30% " + discountRating)
-
                             }
                             2 -> {
 
                                 discountRating = (values!!.estimatedPrice * 40 / 100)
-
-                                Log.d("Discount", "40% " + discountRating)
 
                             }
                             1 -> {
 
                                 discountRating = (values!!.estimatedPrice * 50 / 100)
 
-                                Log.d("Discount", "50% " + discountRating)
-
                             }
-
-
                         }
 
                         updatePrice = (values!!.estimatedPrice - discountRating)
@@ -762,37 +719,12 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, SensorEventListene
                         updatePrice(round)
 
 
-
-                        Log.d("Discount", "updatePrice " + updatePrice)
-
-                        Log.d("Discount", "ROUNDED " + round.toString())
-
-
                     }
 
                     override fun onCancelled(error: DatabaseError) {
 
                     }
 
-/*    private fun UpdatePrice(round: Double) {
-
-        Log.d("Discount", "Outside UpdatePrice FUNCTION " + round)
-        Log.d("Discount",  "tripNumberId" + tripNumberId)
-*//*        val updateDiscount = HashMap<String, Any>()
-
-
-
-        updateDiscount.put("discountPrice", round)*//*
-        FirebaseDatabase.getInstance()
-                .getReference(Common.TRIP)
-                .child(tripNumberId!!)
-                .child("newPrice")
-                .setValue(round)
-
-                //.updateChildren(updateDiscount)
-
-
-    }*/
                 })
     }
 
@@ -808,9 +740,11 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, SensorEventListene
                 .addOnFailureListener { e ->  Toast.makeText(this@MapsActivity, e.message, Toast.LENGTH_SHORT).show()
                 }.addOnSuccessListener {
 
-                    Log.d("Discount", "UPDATE PRICE : $round")
+
+                    complete_Pictures.isEnabled = false
 
                     complete_Pictures.visibility = View.GONE
+
 
                     complete_journey_button.visibility = View.VISIBLE
 
@@ -898,9 +832,6 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, SensorEventListene
                                             .include(destination)
                                             .build()
 
-
-                                    Log.d("MapActivity", "createGeoFirePickupLocation")
-
                                     createGeoFireDestinationLocation(driverRequestReceived!!.key, destination)
 
 
@@ -912,13 +843,8 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, SensorEventListene
                                     Toast.makeText(this@MapsActivity, e.message, Toast.LENGTH_SHORT).show()
 
                                 }
-
                             })
-
                 }
-
-
-
     }
 
     private fun createGeoFireDestinationLocation(key: String?, destination: LatLng) {
@@ -929,9 +855,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, SensorEventListene
         destinationGeoFire!!.setLocation(key!!,
         GeoLocation(destination.latitude, destination.longitude), {key1, error ->
 
-
         })
-
     }
 
     private fun init(){
@@ -939,8 +863,6 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, SensorEventListene
         iGoogleAPI = RetroFitClient.instance!!.create(IGoogleAPI::class.java)
 
         onlineRef = FirebaseDatabase.getInstance().getReference().child(".info/connected")
-
-        //If Permission is Not Allowed Do Not init, Let the User Allow Permissions First
 
         if (ActivityCompat.checkSelfPermission(
                         this@MapsActivity,
@@ -1000,17 +922,13 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, SensorEventListene
 
                     val newPos = LatLng(locationResult!!.lastLocation.latitude, locationResult!!.lastLocation.longitude)
 
-                    Log.d("MapActivity", pickupGeoFire.toString())
-
                     if (pickupGeoFire != null){
 
-                        Log.d("MapActivity", "pickupGeoFire != null")
 
                         pickupGeoQuery =
                                 pickupGeoFire!!.queryAtLocation(GeoLocation(locationResult.lastLocation.latitude,
                                 locationResult.lastLocation.longitude), Common.MIN_RANGE_PICKUP_KM)
 
-                        Log.d("MapActivity", "pickupGeoQuery " + pickupGeoQuery.toString())
 
                         pickupGeoQuery!!.addGeoQueryEventListener(pickupGeoQueryListener )
 
@@ -1018,13 +936,9 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, SensorEventListene
 
                     if (destinationGeoFire != null){
 
-                        Log.d("MapActivity", "destinationGeoFire != null")
-
                         destinationGeoQuery =
                                 destinationGeoFire!!.queryAtLocation(GeoLocation(locationResult.lastLocation.latitude,
                                         locationResult.lastLocation.longitude), Common.MIN_RANGE_PICKUP_KM)
-
-                        Log.d("MapActivity", "destinationGeoQuery " + destinationGeoQuery.toString())
 
                         destinationGeoQuery!!.addGeoQueryEventListener(destinationGeoQueryListener)
 
@@ -1057,8 +971,6 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, SensorEventListene
 
                                 }
                                 .addOnSuccessListener {  }
-
-
                         }
 
                     }
@@ -1082,25 +994,6 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, SensorEventListene
 
             val cityName = addressList[0].countryName
 
-            //postalCode(D08AD6R)
-            // featureName(10)
-            // adminArea(country Dublin)
-            //premises(Upper Cross Road)
-            //thoroughfare(10)
-            //subThoroughfare(10)
-            // countryCode(Ireland)
-            // countryName(Ireland)
-            // subLocality(Rialto)
-
-            // url(Crash)
-            //phone(Crash)
-            //getAddressLine(3)(Crash)
-            //maxAddressLineIndex(Crash)
-            // locale(Crash)
-            // locality(Crashes)
-            // subAdminArea(Crashes)
-
-
             driversLocationRef = FirebaseDatabase.getInstance()
                     .getReference(Common.DRIVERS_LOCATION_REFERENCE).child(cityName)
 
@@ -1108,8 +1001,6 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, SensorEventListene
                     driversLocationRef.child(FirebaseAuth.getInstance().currentUser!!.uid)
 
             geofire = GeoFire(driversLocationRef)
-
-            //Update Location
 
             geofire.setLocation(
 
@@ -1151,15 +1042,11 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, SensorEventListene
     override fun onMapReady(googleMap: GoogleMap) {
         mMap = googleMap
 
-        //Request Permission
-
         Dexter.withContext(this)
             .withPermission(Manifest.permission.ACCESS_FINE_LOCATION)
             .withListener(object:PermissionListener{
 
                 override fun onPermissionGranted(p0: PermissionGrantedResponse?) {
-
-                    //Enable Button First
 
                     if (ActivityCompat.checkSelfPermission(
                                     this@MapsActivity,
@@ -1196,16 +1083,11 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, SensorEventListene
 
                     }
 
-                    //Location
-
                     buildLocationRequest()
 
                     buildLocationCallback()
 
                     updateLocation()
-
-
-
 
                 }
 
@@ -1224,6 +1106,8 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, SensorEventListene
 
 
             }).check()
+
+        mMap.uiSettings.isZoomControlsEnabled = true
 
         Toast.makeText(this@MapsActivity, "Your Online", Toast.LENGTH_SHORT).show()
     }
@@ -1261,25 +1145,14 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, SensorEventListene
             oldTime = currentTime
             var speed= Math.abs(x+y+z-xold-yold-zold)/timeDiff*10000
 
-/*            if(speed > threadShould){
 
-               // var v=getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
-               // v.vibrate(500)
-               // Toast.makeText(this, "Vibrate Shake", Toast.LENGTH_LONG).show()
 
-            }
-
-            else */if (z > 14.0){//10.0){ //previously x they y
-
-                //var brakingCount: Int = 0
+            if (z > 14.0){
 
                 var v=getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
                 v.vibrate(500)
-                //Toast.makeText(this, "Braking Hard -" + x.absoluteValue , Toast.LENGTH_LONG).show()
 
-                val braking = Save(z) //x
-
-               // val brakingRound: Float = String.format("%.2f", braking).toFloat()
+                val braking = Save(z)
 
              FirebaseDatabase.getInstance()
                     .getReference(Common.TRIP)
@@ -1325,8 +1198,6 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, SensorEventListene
                          mUser = mAuth!!.currentUser
                          val userID = mUser!!.uid
 
-                         //FirebaseAuth.getInstance().currentUser!!.uid
-
                          val update_rating = HashMap<String, Any>()
 
                          update_rating.put("rating", newRating)
@@ -1337,7 +1208,6 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, SensorEventListene
                                  .addOnFailureListener { e ->  Toast.makeText(this@MapsActivity, e.message, Toast.LENGTH_SHORT).show()
                                  }.addOnSuccessListener {
 
-                                     Log.d("Sensor", "Rating : $newRating")
 
                                 }
 
@@ -1352,48 +1222,10 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, SensorEventListene
                                  .addOnFailureListener { e ->  Toast.makeText(this@MapsActivity, e.message, Toast.LENGTH_SHORT).show()
                                  }.addOnSuccessListener {
 
-                                     Log.d("Sensor", "Braking Count : $brakingCount")
-                                     Log.d("Sensor", "New Driver Rating : $newRating")
-
 
                                  }
-
-/*                         FirebaseDatabase.getInstance()
-                                 .getReference(Common.TRIP)
-                                 .child(tripNumberId!!).child("brakingCount").setValue(brakingCount)
-                                 .addOnFailureListener { e ->  Toast.makeText(this@MapsActivity, e.message, Toast.LENGTH_SHORT).show()
-                                 }.addOnSuccessListener {
-
-                                     Log.d("Sensor", "Braking Count : $brakingCount")
-
-
-                                 }*/
-/*
-                         val update_newDriverRating = HashMap<String, Any>()
-
-                         FirebaseDatabase.getInstance()
-                                 .getReference(Common.TRIP)
-                                 .child(tripNumberId!!)
-                                 .updateChildren(update_newDriverRating)
-                                 .addOnFailureListener { e ->  Toast.makeText(this@MapsActivity, e.message, Toast.LENGTH_SHORT).show()
-                                 }.addOnSuccessListener {
-
-                                     Log.d("Sensor", "New Driver Rating : $newRating")
-
-                                 }*/
-
                      }
-
-/*                val uid = FirebaseAuth.getInstance().uid ?: ""
-                val ref = FirebaseDatabase.getInstance().getReference("/DriverInfo/mapSensor/$uid").push()
-                //val ref = FirebaseDatabase.getInstance().getReference("/UserInfo/mapSensor/$uid").push()
-
-                val braking = save(x)
-
-                ref.setValue(braking)*/
-
             }
-
         }
     }
 
@@ -1409,16 +1241,6 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, SensorEventListene
 
         return super.onOptionsItemSelected(item)
     }
-
-/*    override fun onResume() {
-        super.onResume()
-        sensorManager!!.registerListener(this, sensor, SensorManager.SENSOR_DELAY_NORMAL)
-    }
-
-    override fun onPause() {
-        super.onPause()
-        sensorManager!!.unregisterListener(this)
-    }*/
 
     private class Save(val sensor: Float) {
 
@@ -1456,8 +1278,6 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, SensorEventListene
                     !!.subscribeOn(Schedulers.io())
                             .observeOn(AndroidSchedulers.mainThread())
                             .subscribe { returnResult ->
-
-                                Log.d("API_RETURN", returnResult)
 
                                 try {
 
@@ -1527,8 +1347,6 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, SensorEventListene
                                             .include(destination)
                                             .build()
 
-                                    //Add Car Icon for Origin
-
                                     val objects = jsonArray.getJSONObject(0)
 
                                     val legs = objects.getJSONArray("legs")
@@ -1554,12 +1372,8 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, SensorEventListene
                                     mMap.moveCamera(CameraUpdateFactory.newLatLngBounds(latLngBound, 160))
                                     mMap.moveCamera(CameraUpdateFactory.zoomTo(mMap.cameraPosition!!.zoom-1))
 
-                                    //Display Layout
-
                                     chip_decline.visibility = View.VISIBLE
                                     layout_accept.visibility = View.VISIBLE
-
-                                    //Countdown Timer
 
                                     countDownEvent = Observable.interval(200, TimeUnit.MILLISECONDS)
                                             .observeOn(AndroidSchedulers.mainThread())
@@ -1571,7 +1385,6 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, SensorEventListene
                                             .takeUntil{aLong -> aLong == "100".toLong()} //10 Seconds
                                             .doOnComplete{
 
-                                                //Toast.makeText(this@MapsActivity, "Collection Accepted", Toast.LENGTH_LONG).show()
                                                 createTripPlan(event, duration, distance)
 
                                             }.subscribe()
@@ -1582,17 +1395,11 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, SensorEventListene
                                     Toast.makeText(this@MapsActivity, e.message, Toast.LENGTH_SHORT).show()
 
                                 }
-
                             })
-
                 }
-
-
     }
 
     private fun createGeoFirePickupLocation(key: String?, destination: LatLng) {
-
-        Log.d("MapActivity", "Entered createGeoFirePickupLocation")
 
         val ref = FirebaseDatabase.getInstance()
                 .getReference(Common.TRIP_PICKUP_REF)
@@ -1609,17 +1416,12 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, SensorEventListene
             else
 
                 Log.d("MapActivity", key1 + " was Successfully Created")
-
-
         })
-
     }
 
     private fun createTripPlan(event: DriverRequestReceived, duration: String, distance: String) {
 
         setLayoutProcess(true)
-
-        //Sync the Sever Time with the Device
 
         FirebaseDatabase.getInstance().getReference(".info/serverTimeOffset")
             .addListenerForSingleValueEvent(object: ValueEventListener{
@@ -1629,8 +1431,6 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, SensorEventListene
 
                     val estimateTime = System.currentTimeMillis()+ timeOffset!!
                     var tripTime = SimpleDateFormat("dd/MM/yyyy HH:mm aa").format(estimateTime)
-
-                    //Load User Information
 
                     FirebaseDatabase.getInstance()
                         .getReference(Common.USER_INFO)
@@ -1642,8 +1442,6 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, SensorEventListene
                                 if(snapshot.exists()){
 
                                     val userModel = snapshot.getValue(UserModel::class.java)
-
-                                    //Get Location
 
                                     if (ActivityCompat.checkSelfPermission(
                                             this@MapsActivity,
@@ -1674,10 +1472,6 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, SensorEventListene
 
                                             val formatter = DateTimeFormatter.ofLocalizedDateTime(FormatStyle.MEDIUM)
                                             val formatted = current.format(formatter)
-
-
-
-                                            //Create Trip Planner
 
                                             val tripPlanModel = TripPlanModel()
 
@@ -1711,8 +1505,6 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, SensorEventListene
 
                                             }
 
-                                            //val collectionPhotos = CollectionPhotos()
-
                                             tripPlanModel.driver = FirebaseAuth.getInstance().currentUser!!.uid
                                             tripPlanModel.user = event!!.key
                                             tripPlanModel.driverInfoModel = Common.currentUser
@@ -1720,7 +1512,6 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, SensorEventListene
                                             tripPlanModel.origin = event.pickupLocation
                                             tripPlanModel.originString = event.pickupLocationString
                                             tripPlanModel.destination = event.destinationLocation
-                                            //tripPlanModel.destinationString = event.destinationLocationString
                                             tripPlanModel.distancePickup = distance
                                             tripPlanModel.durationPickup = duration
                                             tripPlanModel.currentLat = location.latitude
@@ -1735,17 +1526,9 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, SensorEventListene
                                             tripPlanModel.oldDriverRating = Common.currentUser!!.rating
 
 
-
-                                            //tripPlanModel.collectionPhotos = collectionPhotos
-                                            /*tripPlanModel.collectionPhotos = null
-                                            tripPlanModel.dropOffPhotos = null*/
-
-
                                             tripNumberId = Common.createUniqueTripIdNumber(timeOffset)
 
                                             tripPlanModel.collectionNumber = tripNumberId
-
-                                            //Submit to Firebase
 
                                             FirebaseDatabase.getInstance().getReference(Common.TRIP)
                                                 .child(tripNumberId!!)
@@ -1770,15 +1553,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, SensorEventListene
 
 
                                                 }
-
-                                           /* FirebaseDatabase.getInstance().getReference(Common.USER_INFO)
-                                                    .child(event!!.key!!)
-                                                    .child("Collections")
-                                                    .child(tripNumberId!!)
-                                                    .setValue(tripPlanModel)*/
-
                                         }
-
                                 }
 
                                 else{
@@ -1794,10 +1569,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, SensorEventListene
                                 Toast.makeText(this@MapsActivity, error.message, Toast.LENGTH_SHORT).show()
 
                             }
-
-
                         })
-
                 }
 
                 override fun onCancelled(error: DatabaseError) {
@@ -1805,20 +1577,13 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, SensorEventListene
                     Toast.makeText(this@MapsActivity, error.message, Toast.LENGTH_SHORT).show()
 
                 }
-
-
             })
-
-
-
     }
 
     private fun setOfflineModeFroDriver(event: DriverRequestReceived, duration: String, distance: String) {
 
         UserUtils.sendAcceptRequestToDriver(this, root_layout, event.key!!, tripNumberId)
 
-
-        //Go to Offline
         if (currentUserRef != null)
 
             currentUserRef!!.removeValue()
@@ -1873,8 +1638,6 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, SensorEventListene
                 TimeUnit.MILLISECONDS.toMinutes(l) - TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(l)),
                         TimeUnit.MILLISECONDS.toSeconds(l) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(l)))
 
-                Log.d("MapActivity", txt_notify_user.text as String)
-
             }
 
             override fun onFinish() {
@@ -1882,13 +1645,10 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, SensorEventListene
                 txt_start_estimate_distance.setText(dropOffDistance)
                 txt_start_estimate_time.setText(dropOffTime)
 
-                //Toast.makeText(this@MapsActivity, getString(R.string.times_up), Toast.LENGTH_LONG ).show()
-
             }
 
         }
                 .start()
-                Log.d("MapActivity", "CountDown Timer Started")
 
     }
 }

@@ -20,5 +20,4 @@ class DriverInfoModel {
      var licenceNumber:String? = null
      var licenceDocuments:String? = null
 
-
 }
