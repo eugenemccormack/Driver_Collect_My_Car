@@ -46,8 +46,6 @@ class TripPlanModel {
 
     var estimatedPrice = 0.0
 
-    //var discountPrice = 0.0
-
     var totalPrice = 0.0
 
     var brakingCount = 0

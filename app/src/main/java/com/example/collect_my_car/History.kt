@@ -60,26 +60,6 @@ class History : AppCompatActivity(), HistoryAdapter.OnItemClickListener {
 
                     val id = ds.key
 
-/*                    val userInfoRef3 = database.getReference(Common.TRIP).child(id!!).child("driver")
-
-                    userInfoRef3.addListenerForSingleValueEvent(object : ValueEventListener{
-                        override fun onDataChange(snapshot2: DataSnapshot) {
-
-                            if(snapshot2.value?.equals(userID) == true) {
-
-                                Log.d("Test ", "FOUND  " + snapshot2) //Displays This: DataSnapshot { key = user, value = QdCe2CjMTvbWCGHvAoHXGQehGL33 }
-
-                                Log.d("Test ", "FOUND KEY  " + snapshot2.key)
-                            }
-
-
-                        }
-
-                        override fun onCancelled(error: DatabaseError) {
-
-
-                        }
-                    })*/
                     val userInfoRef4 = database.getReference(Common.TRIP).child(id!!)
 
                     userInfoRef4.addListenerForSingleValueEvent(object : ValueEventListener{
@@ -121,8 +101,6 @@ class History : AppCompatActivity(), HistoryAdapter.OnItemClickListener {
     override fun onResume() {
         super.onResume()
 
-        //posts.clear()
-
         adapter.notifyDataSetChanged()
     }
 
@@ -138,8 +116,6 @@ class History : AppCompatActivity(), HistoryAdapter.OnItemClickListener {
     }
 
     override fun onBackPressed() {
-
-        //posts.clear()
 
         finish()
 

@@ -554,24 +554,6 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, SensorEventListene
 
             }
 
-            mAuth = FirebaseAuth.getInstance()
-
-            mUser = mAuth!!.currentUser
-            val userID = mUser!!.uid
-
-            val update_rating = HashMap<String, Any>()
-
-            update_rating.put("rating", 5)
-            FirebaseDatabase.getInstance()
-                    .getReference(Common.DRIVER_INFO_REFERENCE)
-                    .child(userID)
-                    .updateChildren(update_rating)
-                    .addOnFailureListener { e ->  Toast.makeText(this@MapsActivity, e.message, Toast.LENGTH_SHORT).show()
-                    }.addOnSuccessListener {
-
-
-                    }
-
             startAccelerometer()
 
             start_journey_button.visibility = View.GONE
